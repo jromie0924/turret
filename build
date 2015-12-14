@@ -1,0 +1,3 @@
+#!/bin/bash
+
+g++ -ggdb `pkg-config --cflags opencv` -o `basename videoFeed.cpp .cpp` videoFeed.cpp `pkg-config --libs opencv` -lglut
