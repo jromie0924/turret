@@ -17,13 +17,19 @@ using namespace cv;
 float minRatio = 0.8f;
 
 TScan::TScan(Mat f) {
-	frame = f.clone();
-	//frame = frame > 0;
+	// copy f to local frame var
+	frame = f.clone() > 0;
+
+	//copy frame to mask
 	mask = frame.clone();
+
+	//This makes the background of the masked matrix to a grey color
+	//Makes it so we can see all individual blocks.
 	mask = 100;
 }
 
 Mat* TScan::scanIt() {
+	//each block to be 16x16 pixels
 	cv::Size block(16, 16);
 
 	for(int j = 0; j < frame.rows; j += block.height) {
@@ -33,6 +39,7 @@ Mat* TScan::scanIt() {
 
 			unsigned int cWhite = 0, cBlack = 0;
 
+			//loop through the current block and add up all black and white pixels in it
 			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; ++y) {
 				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; ++x) {
 					if(y < frame.rows && x < frame.cols) {
@@ -46,8 +53,14 @@ Mat* TScan::scanIt() {
 			}
 
 			unsigned char blockColor = 0;
+
+			//if the ratio is greater than or equal to the minimum ratio value, we make the block white.
+			//else leave black.
 			if((float)cWhite / ((float)cWhite + (float)cBlack) > minRatio) blockColor = 255;
 
+
+			//this loops through all pixels the area of the current block; sets the pixel color accoring to
+			//the blockColor value
 			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; ++y) {
 				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; ++x) {
 					if(y < frame.rows && x < frame.cols) {

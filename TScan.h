@@ -16,12 +16,18 @@ using namespace cv;
 
 class TScan {
 private:
+	//original matrix
 	Mat frame;
+
+	//matrix to be modified
 	Mat mask;
 
 public:
+	//integer values to keep track of the location of white blocks
 	int xVal, yVal;
 	TScan(Mat);
+
+	//scanning function returns a pointer to the masked matrix
 	Mat* scanIt();
 };
 
