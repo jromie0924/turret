@@ -14,8 +14,6 @@ http://docs.opencv.org/master/d1/dc5/tutorial_background_subtraction.html#gsc.ta
 //C++
 #include <iostream>
 #include <sstream>
-//#include <thread>
-//#include <mutex>
 
 //local
 #include "TScan.h"

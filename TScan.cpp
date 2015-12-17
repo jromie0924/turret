@@ -7,8 +7,6 @@
 #include <iostream>
 #include <sstream>
 #include <cstring>
-//#include <thread>
-//#include <mutex>
 
 //local
 #include "TScan.h"
