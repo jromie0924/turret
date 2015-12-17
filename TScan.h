@@ -10,8 +10,8 @@
 //C++
 #include <iostream>
 #include <sstream>
-#include <thread>
-#include <mutex>
+//#include <thread>
+//#include <mutex>
 
 using namespace std;
 using namespace cv;
