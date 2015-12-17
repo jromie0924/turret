@@ -25,7 +25,7 @@ private:
 
 public:
 	TScan(Mat);
-	Mat& scanIt();
+	Mat* scanIt();
 };
 
 

@@ -25,10 +25,39 @@ TScan::TScan(Mat f) {
 	minRatio = 0.3f;
 }
 
-Mat& TScan::scanIt() {
+Mat* TScan::scanIt() {
 
-	
+	for(int j = 0; j < frame.rows; j += block.height) {
+		for(int i = 0; i < frame.cols; i += block.width) {
+			//CURRENT BLOCK
+			Rect currentBlock(i, j, block.width, block.height);
 
+			unsigned int cWhite = 0, cBlack = 0;
 
-	return frame;
+			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; y++) {
+				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; x++) {
+					if(y < frame.rows && x < frame.cols) {
+						if(thres.at<unsigned char>(x,y) == 255) {
+							cWhite++;
+						} else {
+							cBlack++;
+						}
+					}
+				}
+			}
+
+			unsigned char blockColor = 0;
+			if((float)cWhite / ((float)cWhite + (float)cBlack) >= minRatio) blockColor = 255;
+
+			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; y++) {
+				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; x++) {
+					if(y < frame.rows && x < frame.cols) {
+						mask.at<unsigned char>(x,y) = blockColor;
+					}
+				}
+			}
+		}
+	}
+
+	return & mask;
 }
