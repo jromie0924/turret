@@ -14,7 +14,7 @@
 using namespace std;
 using namespace cv;
 
-float minRatio = 0.3f;
+float minRatio = 0.8f;
 
 TScan::TScan(Mat f) {
 	frame = f.clone();
