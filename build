@@ -4,4 +4,4 @@
 clear
 #g++ -ggdb `pkg-config --cflags opencv` -o `basename backgroundSubtractor.cpp .cpp` backgroundSubtractor.cpp `pkg-config --libs opencv` -lglut
 
-g++ backgroundSubtractor.cpp -o BGS `pkg-config --cflags --libs opencv`
+g++ backgroundSubtractor.cpp TScan.cpp -std=c++11 -o BGS -lpthread `pkg-config --cflags --libs opencv`
