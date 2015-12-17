@@ -14,7 +14,9 @@
 using namespace std;
 using namespace cv;
 
-float minRatio = 0.5f;
+float minRatio = 0.4f;
+int dimx = 10;
+int dimy = 10;
 
 TScan::TScan(Mat f) {
 	// copy f to local frame var
@@ -30,7 +32,7 @@ TScan::TScan(Mat f) {
 
 Mat* TScan::scanIt() {
 	//each block to be 16x16 pixels
-	cv::Size block(16, 16);
+	cv::Size block(dimx, dimy);
 
 	for(int j = 0; j < frame.rows; j += block.height) {
 		for(int i = 0; i < frame.cols; i += block.width) {
