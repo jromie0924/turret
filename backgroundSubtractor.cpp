@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 {
     //create windows
     namedWindow("Normal");
-    namedWindow("Motion-senitive");
+    namedWindow("Masked Motion Tracking");
 
 
 
@@ -88,7 +88,7 @@ void processFeed(void) {
 
         //show the current frame and the fg masks
         imshow("Normal", frame);
-        imshow("Motion-senitive", *mask);
+        imshow("Masked Motion Tracking", *mask);
         delete scanner;
         scanner = NULL;
         //get the input from the keyboard
