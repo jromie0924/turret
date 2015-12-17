@@ -19,11 +19,10 @@ using namespace cv;
 class TScan {
 private:
 	Mat frame;
-	Mat thres;
 	Mat mask;
-	float minRatio;
 
 public:
+	int xVal, yVal;
 	TScan(Mat);
 	Mat* scanIt();
 };

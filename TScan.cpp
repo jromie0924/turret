@@ -6,6 +6,7 @@
 //C++
 #include <iostream>
 #include <sstream>
+#include <cstring>
 //#include <thread>
 //#include <mutex>
 
@@ -15,17 +16,18 @@
 using namespace std;
 using namespace cv;
 
-cv::Size block(16, 26);
+float minRatio = 0.3f;
 
 TScan::TScan(Mat f) {
 	frame = f.clone();
-	thres = frame > 0;
-	mask = thres.clone();
+	//frame = frame > 0;
+	mask = frame.clone();
 	mask = 100;
-	minRatio = 0.4f;
 }
 
-Mat TScan::scanIt() {
+Mat* TScan::scanIt() {
+	cv::Size block(16, 16);
+
 	for(int j = 0; j < frame.rows; j += block.height) {
 		for(int i = 0; i < frame.cols; i += block.width) {
 			//CURRENT BLOCK
@@ -33,10 +35,10 @@ Mat TScan::scanIt() {
 
 			unsigned int cWhite = 0, cBlack = 0;
 
-			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height; ++y) {
-				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width; ++x) {
+			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; ++y) {
+				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; ++x) {
 					if(y < frame.rows && x < frame.cols) {
-						if(thres.at<unsigned char>(x,y) == 255) {
+						if(frame.at<unsigned char>(y,x) == 255) {
 							cWhite++;
 						} else {
 							cBlack++;
@@ -51,7 +53,10 @@ Mat TScan::scanIt() {
 			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; ++y) {
 				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; ++x) {
 					if(y < frame.rows && x < frame.cols) {
-						mask.at<unsigned char>(x,y) = blockColor;
+						mask.at<unsigned char>(y,x) = blockColor;
+						if(blockColor == 255) {
+							xVal = x, yVal = y;
+						}
 					}
 				}
 			}

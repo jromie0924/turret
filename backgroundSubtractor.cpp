@@ -30,6 +30,7 @@ Mat *mask;
 Ptr<BackgroundSubtractorMOG2> pMOG2; //MOG2 Background subtractor
 int keyboard; //input from keyboard
 TScan *scanner = NULL;
+int horiz = 0, vert = 0;
 
 // function prototype allows it to be called in the main function
 // before it is actually defined
@@ -71,29 +72,27 @@ void processFeed(void) {
 
         //update the background model
         pMOG2->apply(frame, fgMaskMOG2);
-        mask = scanner->scanIt();
 
         //INSTANTIATION OF THREADING OBJECT TSCAN
         scanner = new TScan(fgMaskMOG2);
+        mask = scanner->scanIt();
+        horiz = scanner->xVal;
+        vert = scanner->yVal;
 
         //get the frame number and write it on the current frame
         stringstream ss;
-    //    rectangle(fgMaskMOG2, cv::Point(10, 2), cv::Point(100,20),
-    //        cv::Scalar(255,255,255), -1);
+
         rectangle(*mask, cv::Point(10, 2), cv::Point(100,20),
             cv::Scalar(255,255,255), -1);
-
-        ss << capture.get(CAP_PROP_POS_FRAMES);
-        string frameNumberString = ss.str();
-
-        putText(*mask, frameNumberString.c_str(), cv::Point(15, 15),
+        string recStr = to_string(horiz) + ", " + to_string(vert);
+        putText(*mask, recStr, cv::Point(15, 15),
             FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
 
         //show the current frame and the fg masks
         imshow("Normal", frame);
         imshow("Motion-senitive", *mask);
         delete scanner;
-        scanner = NULL;
+        scanner = NULL; 
         //get the input from the keyboard
         keyboard = waitKey( 30 );
     }
