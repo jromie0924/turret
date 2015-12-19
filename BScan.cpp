@@ -9,28 +9,28 @@
 #include <cstring>
 
 //local
-#include "TScan.h"
+#include "BScan.h"
 
 using namespace std;
 using namespace cv;
 
-float minRatio = 0.4f;
-int dimx = 10;
-int dimy = 10;
+float minRatio = 0.5f;
+int dimx = 15;
+int dimy = 15;
 
-TScan::TScan(Mat f) {
+BScan::BScan(Mat f) {
 	// copy f to local frame var
-	frame = f.clone() > 0;
+	frame = f.clone();
 
 	//copy frame to mask
 	mask = frame.clone();
 
 	//This makes the background of the masked matrix to a grey color
 	//Makes it so we can see all individual blocks.
-	mask = 100;
+	//mask = 0;
 }
 
-Mat* TScan::scanIt() {
+Mat* BScan::scanIt() {
 	//each block to be 16x16 pixels
 	cv::Size block(dimx, dimy);
 
@@ -42,8 +42,8 @@ Mat* TScan::scanIt() {
 			unsigned int cWhite = 0, cBlack = 0;
 
 			//loop through the current block and add up all black and white pixels in it
-			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; ++y) {
-				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; ++x) {
+			for(int y = currentBlock.y; y < currentBlock.y + currentBlock.height; ++y) {
+				for(int x = currentBlock.x; x < currentBlock.x + currentBlock.width; ++x) {
 					if(y < frame.rows && x < frame.cols) {
 						if(frame.at<unsigned char>(y,x) == 255) {
 							cWhite++;
@@ -63,8 +63,8 @@ Mat* TScan::scanIt() {
 
 			//this loops through all pixels the area of the current block; sets the pixel color accoring to
 			//the blockColor value
-			for(int y = currentBlock.y + 1; y < currentBlock.y + currentBlock.height - 1; ++y) {
-				for(int x = currentBlock.x + 1; x < currentBlock.x + currentBlock.width - 1; ++x) {
+			for(int y = currentBlock.y; y < currentBlock.y + currentBlock.height; ++y) {
+				for(int x = currentBlock.x; x < currentBlock.x + currentBlock.width; ++x) {
 					if(y < frame.rows && x < frame.cols) {
 						mask.at<unsigned char>(y,x) = blockColor;
 						if(blockColor == 255) {

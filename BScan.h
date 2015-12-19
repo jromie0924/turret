@@ -1,5 +1,5 @@
-#ifndef TSCAN_H
-#define TSCAN_H
+#ifndef BSCAN_H
+#define BSCAN_H
 
 //opencv
 #include "opencv2/imgcodecs.hpp"
@@ -14,7 +14,7 @@
 using namespace std;
 using namespace cv;
 
-class TScan {
+class BScan {
 private:
 	//original matrix
 	Mat frame;
@@ -25,7 +25,7 @@ private:
 public:
 	//integer values to keep track of the location of white blocks
 	int xVal, yVal;
-	TScan(Mat);
+	BScan(Mat);
 
 	//scanning function returns a pointer to the masked matrix
 	Mat* scanIt();
