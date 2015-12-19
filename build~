@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+clear
+
+
+#for debugging
+#g++ -g TurrentEyes.cpp BScan.cpp -std=c++11 -o execute -lpthread `pkg-config --cflags --libs opencv`
+
+#release
+g++ TurrentEyes.cpp BScan.cpp -std=c++11 -o execute -lpthread `pkg-config --cflags --libs opencv`
