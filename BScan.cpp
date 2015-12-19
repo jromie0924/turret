@@ -37,7 +37,7 @@ Mat* BScan::scanIt() {
 
 			unsigned int cWhite = 0, cBlack = 0;
 
-			//loop through the current block and add up all black and white pixels in it
+			//loop through the currentBlock object and add up all black and white pixels in it
 			for(int y = currentBlock.y; y < currentBlock.y + currentBlock.height; ++y) {
 				for(int x = currentBlock.x; x < currentBlock.x + currentBlock.width; ++x) {
 					if(y < frame.rows && x < frame.cols) {
