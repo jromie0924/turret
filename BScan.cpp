@@ -24,10 +24,6 @@ BScan::BScan(Mat f) {
 
 	//copy frame to mask
 	mask = frame.clone();
-
-	//This makes the background of the masked matrix to a grey color
-	//Makes it so we can see all individual blocks.
-	//mask = 0;
 }
 
 Mat* BScan::scanIt() {
