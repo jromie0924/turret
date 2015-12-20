@@ -51,6 +51,8 @@ int main(int argc, char** argv)
 }
 void processFeed(void) {
     VideoCapture capture;
+
+    /** CAMERA NUMBER **/
     capture.open(1);
     if(!capture.isOpened()){
         //error in opening the video input
