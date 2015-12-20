@@ -39,8 +39,8 @@ void processFeed(void);
 int main(int argc, char** argv)
 {
     //create windows
-    namedWindow("Normal");
-    namedWindow("Masked Motion Tracking");
+    namedWindow("Normal", 1);
+    namedWindow("Masked Motion Tracking", 1);
 
     //create Background Subtractor objects
     pMOG2 = createBackgroundSubtractorMOG2();
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 }
 void processFeed(void) {
     VideoCapture capture;
-    capture.open(0);
+    capture.open(1);
     if(!capture.isOpened()){
         //error in opening the video input
         cerr << "Unable to open video feed." << endl;

@@ -14,9 +14,9 @@
 using namespace std;
 using namespace cv;
 
-float minRatio = 0.5f;
-int dimx = 15;
-int dimy = 15;
+float minRatio = 0.3f;
+int dimx = 10;
+int dimy = 10;
 
 BScan::BScan(Mat f) {
 	// copy f to local frame var
