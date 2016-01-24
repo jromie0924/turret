@@ -2,6 +2,7 @@
 
 Modified code from source:
 http://docs.opencv.org/master/d1/dc5/tutorial_background_subtraction.html#gsc.tab=0
+LINE 57 is where you select which camera to use.
 
 */
 

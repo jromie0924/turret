@@ -14,7 +14,7 @@
 using namespace std;
 using namespace cv;
 
-float minRatio = 0.3f;
+float minRatio = 0.7f;
 int dimx = 10;
 int dimy = 10;
 
