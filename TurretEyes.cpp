@@ -30,8 +30,8 @@ Mat *mask;
 Ptr<BackgroundSubtractorMOG2> pMOG2; //MOG2 Background subtractor
 int keyboard; //input from keyboard
 
-//SerialComm object stored in the heap
-SerialComm *serial = (SerialComm*)malloc(sizeof(SerialComm));
+//SerialComm object pointer
+SerialComm *serial;
 
 //BScan pointer
 BScan *scanner = NULL;
@@ -45,6 +45,8 @@ void processFeed(void);
 
 int main(int argc, char** argv)
 {
+    // store the SerialComm object in the heap
+    serial = (SerialComm*)malloc(sizeof(SerialComm));
     if(serial->init() == -1) {
         cout << "Unable to open the serial port. Exiting.\n";
         exit(EXIT_FAILURE);

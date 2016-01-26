@@ -55,11 +55,5 @@ void SerialComm::getData(int x) {
 }
 
 void SerialComm::sendData() {
-	unsigned char cmd[] = "INIT \r\n";
-	int n_written = 0;
-	int spot = 0;
-	size_t sz = 1;
-	do {
-		write(tty, &cmd[spot], sz);
-	} while(cmd[spot - 1] != '\n' && n_written > 0);
+	
 }
