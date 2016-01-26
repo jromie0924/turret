@@ -17,6 +17,7 @@ LINE 57 is where you select which camera to use.
 #include <sstream>
 
 //local
+#include "SerialComm.h"
 #include "BScan.h"
 
 using namespace cv;
@@ -29,7 +30,12 @@ Mat *mask;
 Ptr<BackgroundSubtractorMOG2> pMOG2; //MOG2 Background subtractor
 int keyboard; //input from keyboard
 
+//SerialComm object stored in the heap
+SerialComm *serial = (SerialComm*)malloc(sizeof(SerialComm));
+
+//BScan pointer
 BScan *scanner = NULL;
+
 //pointers will be set to the values of the public x & y values in BScan object
 int *horiz, *vert;
 
@@ -39,6 +45,10 @@ void processFeed(void);
 
 int main(int argc, char** argv)
 {
+    if(serial->init() == -1) {
+        cout << "Unable to open the serial port. Exiting.\n";
+        exit(EXIT_FAILURE);
+    }
     //create windows
     namedWindow("Normal", 1);
     namedWindow("Masked Motion Tracking", 1);
@@ -52,7 +62,6 @@ int main(int argc, char** argv)
 }
 void processFeed(void) {
     VideoCapture capture;
-
     /** CAMERA NUMBER **/
     capture.open(1);
     if(!capture.isOpened()){
@@ -79,6 +88,8 @@ void processFeed(void) {
         horiz = &(scanner->xVal);
         vert = &(scanner->yVal);
 
+        serial->getData(*horiz);
+
         //scan the current binsry frame output from the apply function call
         mask = scanner->scanIt();
 
@@ -99,4 +110,6 @@ void processFeed(void) {
     }
     //delete capture object
     capture.release();
+    //delete serial
+    free(serial);
 }
