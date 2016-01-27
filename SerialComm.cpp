@@ -16,44 +16,18 @@
 using namespace std;
 
 //Initialize serial port
-int SerialComm::init() {
+void SerialComm::init() {
 	xCoord = 0;
-	memset(&tty, 0, sizeof tty);
-
-	int fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY);
-
-	if(tcgetattr(fd, &tty) != 0) {
-		cout << "Error " << errno << " from tcgetattr: " << strerror(errno) << "\n";
-	}
-
-	tty_old = tty;
-
-	if(fd == -1) {
-		cout << "open_port: Unable to open /dev/ttyACM0\n";
-		exit(EXIT_FAILURE);
-	}
-
-	cfsetispeed(&tty, B9600);
-	cfsetospeed(&tty, B9600);
-
-	tty.c_cflag &= ~PARENB;
-	tty.c_cflag &= ~CSTOPB;
-	tty.c_cflag &= ~CSIZE;
-	tty.c_cflag |= CS8;
-
-	cfmakeraw(&tty);
-
-	tcflush(fd, TCIFLUSH);
-
-	tcsetattr(fd, TCSANOW, &tty);
-	return fd;
+	file = fopen("/dev/ttyACM0", "w");
 }
 
 void SerialComm::getData(int x) {
-	xCoord = x;
+	//There are 640 pixels per column
+	//int frac = 60*((double)x / 640.0);
+	//xCoord = frac + 60;
 	sendData();
 }
 
 void SerialComm::sendData() {
-	
+	fprintf(file, "%d\n", xCoord);
 }
