@@ -1,8 +1,17 @@
+#include <Servo.h>
 
+#define pin 4
+//lower bound 60
+//upper bound 120
+Servo servo;
 void setup() {
   // initialize serial:
   Serial.begin(9600);
-  pinMode(4, OUTPUT);
+  servo.attach(pin);
+  servo.write(90);
+  delay(1000);
+  //pinMode(pin, OUTPUT);
+  digitalWrite(pin, LOW);
 }
 
 void loop() {
@@ -10,18 +19,11 @@ void loop() {
 
 
 void serialEvent() {
-  while (Serial.available()) {
+  if (Serial.available()) {
     // get the new byte:
-    
-   // char inChar = (char)Serial.read();
-    int inInt = Serial.parseInt();
-    //inputString += inChar;
-    if (inInt == 295) {
-      digitalWrite(4, HIGH);
-      delay(100);
-      digitalWrite(4, LOW);
-      delay(100);
-    }
+     int inInt = Serial.parseInt();
+     servo.write(inInt);
+     delay(300);
   }
 }
 
