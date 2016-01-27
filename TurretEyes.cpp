@@ -15,6 +15,7 @@ LINE 57 is where you select which camera to use.
 //C++
 #include <iostream>
 #include <sstream>
+#include <unistd.h>
 
 //local
 #include "SerialComm.h"
@@ -47,10 +48,7 @@ int main(int argc, char** argv)
 {
     // store the SerialComm object in the heap
     serial = (SerialComm*)malloc(sizeof(SerialComm));
-    if(serial->init() == -1) {
-        cout << "Unable to open the serial port. Exiting.\n";
-        exit(EXIT_FAILURE);
-    }
+    serial->init();
     //create windows
     namedWindow("Normal", 1);
     namedWindow("Masked Motion Tracking", 1);
@@ -59,7 +57,9 @@ int main(int argc, char** argv)
     pMOG2 = createBackgroundSubtractorMOG2();
     processFeed();
 
+    free(serial);
     destroyAllWindows();
+    cout << "EXITING\n";
     return EXIT_SUCCESS;
 }
 void processFeed(void) {
@@ -90,11 +90,11 @@ void processFeed(void) {
         horiz = &(scanner->xVal);
         vert = &(scanner->yVal);
 
-        serial->getData(*horiz);
+        //serial->getData(*horiz);
+        serial->getData(*horiz); //TEST
 
         //scan the current binsry frame output from the apply function call
         mask = scanner->scanIt();
-
         //displays the x & y values where the gun should (probably) aim
         rectangle(*mask, cv::Point(10, 2), cv::Point(100,20),
             cv::Scalar(255,255,255), -1);
@@ -105,13 +105,13 @@ void processFeed(void) {
         //show the current frame and the fg masks
         imshow("Normal", frame);
         imshow("Masked Motion Tracking", *mask);
-        delete scanner;
-        scanner = NULL;
+        if(scanner) {
+            delete scanner;
+            scanner = NULL;
+        }
         //get the input from the keyboard
         keyboard = waitKey( 30 );
     }
     //delete capture object
     capture.release();
-    //delete serial
-    free(serial);
 }

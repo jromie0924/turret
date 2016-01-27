@@ -9,12 +9,11 @@ using namespace std;
 
 class SerialComm {
 private:
-	struct termios tty;
-	struct termios tty_old;
+	FILE *file;
 	int xCoord;
 	void sendData();
 public:
-	int init();
+	void init();
 	void getData(int);
 };
 
