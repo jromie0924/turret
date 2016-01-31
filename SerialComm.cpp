@@ -12,13 +12,42 @@
 #include <iostream>
 #include <errno.h>
 #include <fstream>
+#include <exception>
 
 using namespace std;
+
+struct serialException : public exception
+{
+  const char * what() const throw()
+  {
+    return "Cannot connect to serial port. Is arduino connected?";
+  }
+};
+
+bool exists(string& name) {
+	ifstream f(name.c_str());
+	if(f.good()) {
+		f.close();
+		return true;
+	} else {
+		f.close();
+		return false;
+	}
+}
 
 //Initialize serial port
 void SerialComm::init() {
 	xCoord = 0;
-	file = fopen("/dev/ttyACM0", "w");
+	FILE *com;
+	string serialPort = "/dev/ttyACM0";
+	try {
+		if(!exists(serialPort)) {
+			throw serialException();
+		}
+		//file = fopen("/dev/ttyACM0", "w");
+	} catch (serialException& e) {
+		cout << e.what() << endl;
+	}
 }
 
 void SerialComm::getData(int x) {
