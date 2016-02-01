@@ -1,10 +1,4 @@
-/*
-
-Modified code from source:
-http://docs.opencv.org/master/d1/dc5/tutorial_background_subtraction.html#gsc.tab=0
-LINE 57 is where you select which camera to use.
-
-*/
+//Main Program
 
 //opencv
 #include "opencv2/imgcodecs.hpp"
@@ -57,9 +51,13 @@ int main(int argc, char** argv)
     pMOG2 = createBackgroundSubtractorMOG2();
     processFeed();
 
-    free(serial);
+    delete scanner;
+    mask = NULL;
+    horiz = NULL;
+    vert = NULL;
     destroyAllWindows();
     cout << "EXITING\n";
+    free(serial);
     return EXIT_SUCCESS;
 }
 void processFeed(void) {
