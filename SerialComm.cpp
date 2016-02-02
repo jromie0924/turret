@@ -2,22 +2,16 @@
 #include "SerialComm.h"
 
 //Other
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <termios.h>
-#include <fcntl.h>
 #include <string.h>
-#include <time.h>
 #include <iostream>
-#include <errno.h>
 #include <fstream>
 #include <exception>
 
 using namespace std;
 
-struct serialException : public exception
-{
+struct serialException : public exception {
   const char * what() const throw()
   {
     return "Cannot connect to serial port. Is arduino connected?";

@@ -70,7 +70,7 @@ void processFeed(void) {
         exit(EXIT_FAILURE);
     }
     //read input data. ESC or 'q' for quitting
-    while( (char)keyboard != 'q' && (char)keyboard != 27 ){
+    while((char)keyboard != 'q' && (char)keyboard != 27) {
         //read the current frame
         if(!capture.read(frame)) {
             cerr << "Unable to read next frame." << endl;
@@ -108,7 +108,7 @@ void processFeed(void) {
             scanner = NULL;
         }
         //get the input from the keyboard
-        keyboard = waitKey( 30 );
+        keyboard = waitKey(30);
     }
     //delete capture object
     capture.release();

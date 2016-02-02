@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <termios.h>
 
 using namespace std;
 
