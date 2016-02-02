@@ -12,8 +12,7 @@
 using namespace std;
 
 struct serialException : public exception {
-  const char * what() const throw()
-  {
+  const char * what() const throw() {
     return "Cannot connect to serial port. Is arduino connected?";
   }
 };
@@ -32,13 +31,13 @@ bool exists(string& name) {
 //Initialize serial port
 void SerialComm::init() {
 	xCoord = 0;
-	FILE *com;
 	string serialPort = "/dev/ttyACM0";
 	try {
 		if(!exists(serialPort)) {
 			throw serialException();
+		} else {
+			file = fopen("/dev/ttyACM0", "w"); //needs to be closed
 		}
-		//file = fopen("/dev/ttyACM0", "w");
 	} catch (serialException& e) {
 		cout << e.what() << endl;
 	}
