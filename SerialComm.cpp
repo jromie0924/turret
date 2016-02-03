@@ -53,3 +53,7 @@ void SerialComm::getData(int x) {
 void SerialComm::sendData() {
 	fprintf(file, "%d\n", xCoord);
 }
+
+SerialComm::~SerialComm() {
+	fclose(file);
+}

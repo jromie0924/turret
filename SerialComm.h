@@ -13,6 +13,7 @@ private:
 	void sendData();
 public:
 	void init();
+	~SerialComm();
 	void getData(int);
 };
 
