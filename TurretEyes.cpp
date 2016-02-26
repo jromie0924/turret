@@ -15,6 +15,8 @@
 #include "SerialComm.h"
 #include "BScan.h"
 
+#define CAMERA 1
+
 using namespace cv;
 using namespace std;
 
@@ -63,7 +65,7 @@ int main(int argc, char** argv)
 void processFeed(void) {
     VideoCapture capture;
     /** CAMERA NUMBER **/
-    capture.open(1);
+    capture.open(CAMERA);
     if(!capture.isOpened()){
         //error in opening the video input
         cerr << "Unable to open video feed." << endl;
