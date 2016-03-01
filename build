@@ -5,7 +5,7 @@ clear
 
 
 #for debugging
-#g++ -g TurretEyes.cpp BScan.cpp SerialComm.cpp -std=c++11 -o execute -lpthread `pkg-config --cflags --libs opencv`
+#g++ -g Main.cpp BScan.cpp SerialComm.cpp -std=c++11 -o execute -lpthread `pkg-config --cflags --libs opencv`
 
 #release
-g++ TurretEyes.cpp BScan.cpp SerialComm.cpp -std=c++11 -o execute -lpthread `pkg-config --cflags --libs opencv`
+g++ Main.cpp BScan.cpp SerialComm.cpp -std=c++11 -o execute -lpthread `pkg-config --cflags --libs opencv`
