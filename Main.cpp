@@ -1,14 +1,15 @@
-//opencv
+//OpenCV
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 #include <opencv2/highgui.hpp>
 #include <opencv2/video.hpp>
-//C++
+// C++
 #include <iostream>
 #include <sstream>
 #include <unistd.h>
 
+// Local
 #include "BScan.h"
 
 using namespace std;
