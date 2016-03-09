@@ -24,11 +24,11 @@ private:
 
 public:
 	//integer values to keep track of the location of white blocks
-	int xVal, yVal;
+	int x, y;
 	BScan(Mat);
 
 	//scanning function returns a pointer to the masked matrix
-	Mat* scanIt();
+	Mat scanIt();
 };
 
 

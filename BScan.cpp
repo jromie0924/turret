@@ -26,7 +26,7 @@ BScan::BScan(Mat f) {
 	mask = frame.clone();
 }
 
-Mat* BScan::scanIt() {
+Mat BScan::scanIt() {
 	//each block to be 16x16 pixels
 	cv::Size block(dimx, dimy);
 
@@ -64,7 +64,7 @@ Mat* BScan::scanIt() {
 					if(y < frame.rows && x < frame.cols) {
 						mask.at<unsigned char>(y,x) = blockColor;
 						if(blockColor == 255) {
-							xVal = x, yVal = y;
+							x = x, y = y;
 						}
 					}
 				}
@@ -72,5 +72,5 @@ Mat* BScan::scanIt() {
 		}
 	}
 
-	return &mask;
+	return mask;
 }
