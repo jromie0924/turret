@@ -31,4 +31,6 @@ public:
 
 	static int DIM_X;
 	static int DIM_Y;
+	static int ROWS;
+	static int COLS;
 };
