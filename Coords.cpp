@@ -2,30 +2,23 @@
 #include <iostream>
 #include <sstream>
 
+#include "Coords.h"
+
 Coords::Coords() {
-	x = 0;
-	y = 0;
+	row = 0;
+	col = 0;
 }
 
-Coords::Coords(unsigned int xIn, unsigned int yIn) {
-	x = xIn;
-	y = yIn;
+Coords::Coords(int rowIn, int colIn) {
+	row = rowIn;
+	col = colIn;
 }
 
-~Coords() {
+Coords::~Coords() {
 	// Do nothing
 }
 
-void Coords::setCoords(unsigned int xIn, unsigned int yIn) {
-	x = xIn;
-	y = yIn;
+void Coords::setCoords(int rowIn, int colIn) {
+	row = rowIn;
+	col = colIn;
 }
-
-unsigned int Coords::getX() {
-	return x;
-}
-
-unsigned int getY() {
-	return y;
-}
-

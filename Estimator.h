@@ -19,10 +19,12 @@ using namespace cv;
 
 class Estimator {
 public:
-	static Coords estimateTarget(Mat&);
+	Estimator();
+	~Estimator();
+	Coords estimateTarget(Mat&);
 
 private:
-	int** convertToMatrix(Mat&);
+	void convertToMatrix(Mat&, int**);
 	const int X_MAX = 43;
 	const int Y_MAX = 32;
 };

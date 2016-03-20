@@ -9,15 +9,13 @@ using namespace std;
 class Coords {
 public:
 	Coords();
-	Coords(unsigned int, unsigned int);
+	Coords(int, int);
 
-	void setCoords(unsigned int, unsigned int);
-	unsigned int getX();
-	unsigned int getY();
+	void setCoords(int, int);
+
+	int row;
+	int col;
 
 	~Coords();
 
-private:
-	unsigned int x;
-	unsigned int y;
 };

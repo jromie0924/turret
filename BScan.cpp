@@ -16,10 +16,10 @@ using namespace cv;
 
 float minRatio = 0.7f;
 
-int BScan::DIM_X = 15;
-int BScan::DIM_Y = 15;
-int BScan::ROWS = 32;
-int BScan::COLS = 43;
+const int BScan::DIM_X = 15;
+const int BScan::DIM_Y = 15;
+const unsigned int BScan::ROWS = 32;
+const unsigned int BScan::COLS = 43;
 
 BScan::BScan(Mat f) {
 	// copy f to local frame var

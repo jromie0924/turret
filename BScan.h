@@ -20,6 +20,7 @@ private:
 
 	//matrix to be modified
 	Mat mask;
+	
 
 public:
 	//integer values to keep track of the location of white blocks
@@ -29,8 +30,8 @@ public:
 	//scanning function returns a pointer to the masked matrix
 	Mat scanIt();
 
-	static int DIM_X;
-	static int DIM_Y;
-	static int ROWS;
-	static int COLS;
+	static const unsigned int ROWS;
+	static const unsigned int COLS;
+	static const int DIM_X;
+	static const int DIM_Y;
 };
