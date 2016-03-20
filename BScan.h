@@ -1,5 +1,4 @@
-#ifndef BSCAN_H
-#define BSCAN_H
+#pragma once
 
 //opencv
 #include "opencv2/imgcodecs.hpp"
@@ -29,7 +28,7 @@ public:
 
 	//scanning function returns a pointer to the masked matrix
 	Mat scanIt();
+
+	static int DIM_X;
+	static int DIM_Y;
 };
-
-
-#endif

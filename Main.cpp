@@ -36,7 +36,7 @@ Main::Main() {
 	pMOG2 = createBackgroundSubtractorMOG2();
 }
 
-Main::~Main(){
+Main::~Main() {
 	// Do Nothing
 }
 
