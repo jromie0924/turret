@@ -34,7 +34,8 @@ void Estimator::convertToMatrix(Mat& frame, int** matrix) {
 	int nextCol = 0;
 	for(int row = 0; row < frame.rows; row += BScan::DIM_Y) {
 		for(int col = 0; col < frame.cols; col += BScan::DIM_X) {
-			if(frame.at<unsigned char>(row, col) != 0) {
+			Scalar color = frame.at<unsigned char>(row, col);
+			if(color.val[0] != 0) {
 				matrix[nextRow][nextCol++] = 1;
 			} else {
 				matrix[nextRow][nextCol++] = 0;
@@ -43,6 +44,17 @@ void Estimator::convertToMatrix(Mat& frame, int** matrix) {
 		nextRow++;
 		nextCol = 0;
 	}
+
+/*
+	// Cool binary representation of motion detector output in the terminal
+	for(int row = 0; row < ROWS; row++) {
+		for(int col = 0; col < COLS; col++) {
+			cout << matrix[row][col];
+		}
+		cout << endl;
+	}
+*/
+
 }
 
 Coords Estimator::estimateTarget(Mat& frame) {
@@ -70,51 +82,52 @@ Coords Estimator::estimateTarget(Mat& frame) {
 		}
 	}
 
-	// Find the region of the column scan for range of the row scan
-	int threshold = 0;
 	int max = 0;
 
-	// Get the maximum value in the array
+	// Get the maximum value in the col array
 	for(int a = 0; a < COLS; a++) {
 		if(colScanMat[a] > max) {
 			max = colScanMat[a];
 		}
 	}
 
-	// Use the threshold to determinie an estimated best group of (adjacent) columns to scan
-	int streakMax = 0;
-	int streak = 0;
-	int tempLow;
-	int tempHigh;
-	int colLow;
-	int colHigh;
+	// Get the max count
+	max = 0;
 	for(int a = 0; a < COLS; a++) {
-		int val = colScanMat[a];
-		if(val == max || val == max + threshold || val == max - threshold) {
-			if(streak == 0) {
-				tempLow = a;
-			}
-			streak++;			
-		} else {
-			tempHigh = a;
-			if(streak > streakMax) {
-				streakMax = streak;
-				colLow = tempLow;
-				colHigh = tempHigh;
-			}
-			streak = 0;
+		if(rowScanMat[a] > max) {
+			max = colScanMat[a];
 		}
 	}
 
-	// Scan the region for hits
+	int* pos = new int[1];
+	int next = 0;
+	for(int a = 0; a < COLS; a++) {
+		if(colScanMat[a] == max) {
+			pos[next++] = a;
+		}
+	}
+
+	int sum = 0;
+	for(int a = 0; a < next; a++) {
+		sum += colScanMat[pos[a]];
+	}
+
+	delete[] pos;
+	pos = NULL;
+
+	int colAvg = sum / next;
+
+
+	// Do the same for rows
 	for(int row = 0; row < ROWS; row++) {
-		for(int col = colLow; col <= colHigh; col++) {
+		for(int col = 0; col < COLS; col++) {
 			if(matrix[row][col] == 1) {
-				rowScanMat[row]++;
+				rowScanMat[col]++;
 			}
 		}
 	}
 
+	// Get the max count for the row count array
 	max = 0;
 	for(int a = 0; a < ROWS; a++) {
 		if(rowScanMat[a] > max) {
@@ -122,70 +135,41 @@ Coords Estimator::estimateTarget(Mat& frame) {
 		}
 	}
 
-	// Scan the row scan array using threshold just like for columns
-	streakMax = 0;
-	streak = 0;
-	tempLow = 0;
-	tempHigh = 0;
-	int rowLow;
-	int rowHigh;
+	// Get positions of all occurances of the max value
+	pos = new int[1];
+	next = 0;
 	for(int a = 0; a < ROWS; a++) {
-		int val = rowScanMat[a];
-		if(val == max || val == max + threshold || val == max - threshold) {
-			if(streak == 0) {
-				tempLow = a;
-			}
-			streak++;
-		} else {
-			tempHigh = a;
-			if(streak > streakMax) {
-				streakMax = streak;
-				rowLow = tempLow;
-				rowHigh = tempHigh;
-			}
-			streak = 0;
+		if(rowScanMat[a] == max) {
+			pos[next++] = a;
 		}
 	}
 
-	// Compute average values
-	int rowAvg;
-	int count = 0;
-	int total = 0;
-	for(int a = rowLow; a <= rowHigh; a++) {
-		total++;
-		count++;
+	// Get the average position
+	sum = 0;
+	for(int a = 0; a < next; a++) {
+		sum += rowScanMat[pos[a]];
 	}
 
-	rowAvg = total / count + 1;
+	delete[] pos;
+	pos = NULL;
 
-	int colAvg = 0;
-	count = 0;
-	total = 0;
-	for(int a = colLow; a <= colHigh; a++) {
-		total++;
-		count++;
-	}
+	int rowAvg = sum / next;
 
-	colAvg = total / count + 1;
-
-	coords.setCoords(32, 43);
-
-	for(int row = 0; row < ROWS; row++) {
-		for(int col = 0; col < COLS; col++) {
-			cout << matrix[row][col];
-		}
-		cout << endl;
-	}
+	coords.setCoords(rowAvg, colAvg);
 
 	// Delete the 2D array
 	for(int i = 0; i < ROWS; i++) {
 		delete[] matrix[i];
+		matrix[i] = NULL;
 	}
 	delete[] matrix;
+	matrix = NULL;
 
+	// Return the coordinates
 	return coords;
 }
 
+/*
 int main() {
 	Mat image;
 	image = imread("screenshots/testImage1.png", CV_LOAD_IMAGE_COLOR);
@@ -210,7 +194,7 @@ int main() {
 	//namedWindow("Display", 1);
 	//imshow("Display", image);
 
-	waitKey(0);
+	//waitKey(0);
 
 	return 0;
-}
+}*/

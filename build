@@ -8,4 +8,4 @@ clear
 #g++ -g Main.cpp BScan.cpp SerialComm.cpp -std=c++11 -o execute`pkg-config --cflags --libs opencv`
 
 #release
-g++ Main.cpp BScan.cpp SerialComm.cpp -std=c++11 -o execute `pkg-config --cflags --libs opencv`
+g++ Main.cpp BScan.cpp Coords.cpp Estimator.cpp -std=c++11 -o execute `pkg-config --cflags --libs opencv`
