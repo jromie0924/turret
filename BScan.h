@@ -30,8 +30,8 @@ public:
 	//scanning function returns a pointer to the masked matrix
 	Mat scanIt();
 
-	static const unsigned int ROWS;
-	static const unsigned int COLS;
+	static const int ROWS;
+	static const int COLS;
 	static const int DIM_X;
 	static const int DIM_Y;
 };

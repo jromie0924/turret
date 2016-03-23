@@ -33,8 +33,6 @@ private:
 };
 
 Main::Main() {
-	//namedWindow("Normal", 1);
-	//namedWindow("Motion Tracking", 1);
 	pMOG2 = createBackgroundSubtractorMOG2();
 }
 
@@ -67,20 +65,22 @@ void Main::processFeed(void) {
 		//string recStr = to_string(*horiz) + ", " + to_string(*vert);
 		//putText(mask, recStr, cv::Point(15, 15), FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
 
-		Estimator* estimator = new Estimator();
+		Estimator estimator;
 
-		Coords coords = estimator->estimateTarget(mask);
+		Coords coords = estimator.estimateTarget(mask);
 		
 		int row = coords.row;
 		int col = coords.col;
 
 		rectangle(frame, Point((col - 1) * BScan::DIM_X, (row - 1) * BScan::DIM_Y), Point(col * BScan::DIM_X, row * BScan::DIM_Y), Scalar(0, 0, 255), -1);
 
+
+		namedWindow("Normal", 1);
+		//namedWindow("Motion Tracking", 1);
 		imshow("Normal", frame);
 		//imshow("Motion Tracking", mask);
+		//cout << row << ", " << col << endl;
 
-		delete estimator;
-		estimator = NULL;
 		keyboard = waitKey(30);
 	}
 	capture.release();

@@ -18,8 +18,8 @@ float minRatio = 0.7f;
 
 const int BScan::DIM_X = 15;
 const int BScan::DIM_Y = 15;
-const unsigned int BScan::ROWS = 32;
-const unsigned int BScan::COLS = 43;
+const int BScan::ROWS = 32;
+const int BScan::COLS = 43;
 
 BScan::BScan(Mat f) {
 	// copy f to local frame var
