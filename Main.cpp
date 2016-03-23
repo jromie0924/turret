@@ -79,7 +79,6 @@ void Main::processFeed(void) {
 		//namedWindow("Motion Tracking", 1);
 		imshow("Normal", frame);
 		//imshow("Motion Tracking", mask);
-		//cout << row << ", " << col << endl;
 
 		keyboard = waitKey(30);
 	}
