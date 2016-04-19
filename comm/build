@@ -1,0 +1,5 @@
+#!/bin/bash
+
+clear
+
+g++ -o comm Comm.cpp -std=c++11

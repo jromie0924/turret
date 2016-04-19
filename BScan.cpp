@@ -15,8 +15,11 @@ using namespace std;
 using namespace cv;
 
 float minRatio = 0.7f;
-int dimx = 15;
-int dimy = 15;
+
+const int BScan::DIM_X = 15;
+const int BScan::DIM_Y = 15;
+const int BScan::ROWS = 32;
+const int BScan::COLS = 43;
 
 BScan::BScan(Mat f) {
 	// copy f to local frame var
@@ -26,10 +29,9 @@ BScan::BScan(Mat f) {
 	mask = frame.clone();
 }
 
-Mat* BScan::scanIt() {
-	//each block to be 16x16 pixels
-	cv::Size block(dimx, dimy);
-
+Mat BScan::scanIt() {
+	//each block to be (DIM_X)x(DIM_Y) pixels
+	cv::Size block(DIM_X, DIM_Y);
 	for(int j = 0; j < frame.rows; j += block.height) {
 		for(int i = 0; i < frame.cols; i += block.width) {
 			//CURRENT BLOCK
@@ -64,13 +66,12 @@ Mat* BScan::scanIt() {
 					if(y < frame.rows && x < frame.cols) {
 						mask.at<unsigned char>(y,x) = blockColor;
 						if(blockColor == 255) {
-							xVal = x, yVal = y;
+							x = x, y = y;
 						}
 					}
 				}
 			}
 		}
 	}
-
-	return &mask;
+	return mask;
 }

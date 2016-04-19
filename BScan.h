@@ -1,5 +1,4 @@
-#ifndef BSCAN_H
-#define BSCAN_H
+#pragma once
 
 //opencv
 #include "opencv2/imgcodecs.hpp"
@@ -21,15 +20,18 @@ private:
 
 	//matrix to be modified
 	Mat mask;
+	
 
 public:
 	//integer values to keep track of the location of white blocks
-	int xVal, yVal;
+	int x, y;
 	BScan(Mat);
 
 	//scanning function returns a pointer to the masked matrix
-	Mat* scanIt();
+	Mat scanIt();
+
+	static const int ROWS;
+	static const int COLS;
+	static const int DIM_X;
+	static const int DIM_Y;
 };
-
-
-#endif
