@@ -8,11 +8,14 @@
 #include <iostream>
 #include <sstream>
 #include <unistd.h>
+#include <deque>
 
 // Local
 #include "BScan.h"
 #include "Estimator.h"
 #include "Coords.h"
+
+#define MAX_LEN 10
 
 using namespace std;
 using namespace cv;
@@ -22,6 +25,8 @@ public:
 	Main();
 	~Main();
 	void processFeed(void);
+	int colAvg(void);
+	int rowAvg(void);
 
 private:
 	Mat frame, fgMaskMOG2, mask;
@@ -30,6 +35,8 @@ private:
 
 	Ptr<BackgroundSubtractorMOG2> pMOG2;
 	int keyboard;
+	deque<int> colCache;
+	deque<int> rowCache;
 };
 
 Main::Main() {
@@ -40,6 +47,22 @@ Main::~Main() {
 	// Do Nothing
 }
 
+int Main::colAvg(void) {
+	int total = 0;
+	for(int a = 0; a < colCache.size(); a++) {
+		total += colCache.at(a);
+	}
+	return (total / colCache.size());
+}
+
+int Main::rowAvg(void) {
+	int total = 0;
+	for(int a = 0; a < rowCache.size(); a++) {
+		total += rowCache.at(a);
+	}
+	return (total / rowCache.size());
+}
+
 void Main::processFeed(void) {
 	VideoCapture capture;
 	capture.open(CAMERA);
@@ -48,6 +71,7 @@ void Main::processFeed(void) {
 		exit(EXIT_FAILURE);
 	}
 
+	int counter = 0;
 	while((char)keyboard != 'q' && (char)keyboard != 27) {
 		if(!capture.read(frame)) {
 			cerr << "Unable to read next frame." << endl;
@@ -68,9 +92,19 @@ void Main::processFeed(void) {
 		Estimator estimator;
 
 		Coords coords = estimator.estimateTarget(mask);
-		
-		int row = coords.row;
-		int col = coords.col;
+
+		if(counter < MAX_LEN) {
+			rowCache.push_front(coords.row);
+			colCache.push_front(coords.col);
+		} else {
+			rowCache.pop_back();
+			colCache.pop_back();
+			rowCache.push_front(coords.row);
+			colCache.push_front(coords.col);
+		}
+
+		int row = rowAvg();
+		int col = colAvg();
 
 		rectangle(frame, Point(col * BScan::DIM_X, row * BScan::DIM_Y), Point((col + 1) * BScan::DIM_X, (row + 1) * BScan::DIM_Y), Scalar(0, 0, 255), -1);
 
@@ -79,7 +113,9 @@ void Main::processFeed(void) {
 		//namedWindow("Motion Tracking", 1);
 		imshow("Normal", frame);
 		//imshow("Motion Tracking", mask);
-
+		if(counter < MAX_LEN) {
+			counter++;
+		}
 		keyboard = waitKey(30);
 	}
 	capture.release();
@@ -91,5 +127,6 @@ int main(int argc, char** argv) {
 
 	cout << "Exiting..." << endl;
 	delete main;
+	main = NULL;
 	return 0;
 }
