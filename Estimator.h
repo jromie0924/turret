@@ -24,7 +24,9 @@ public:
 	Coords estimateTarget(Mat&);
 
 private:
-	void convertToMatrix(Mat&, int**);
+	void convertToMatrix(Mat&, int**, vector<Coords>&);
 	const int X_MAX = 43;
 	const int Y_MAX = 32;
+
+	int numMovement;
 };

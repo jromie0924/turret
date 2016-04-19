@@ -72,7 +72,7 @@ void Main::processFeed(void) {
 		int row = coords.row;
 		int col = coords.col;
 
-		rectangle(frame, Point((col - 1) * BScan::DIM_X, (row - 1) * BScan::DIM_Y), Point(col * BScan::DIM_X, row * BScan::DIM_Y), Scalar(0, 0, 255), -1);
+		rectangle(frame, Point(col * BScan::DIM_X, row * BScan::DIM_Y), Point((col + 1) * BScan::DIM_X, (row + 1) * BScan::DIM_Y), Scalar(0, 0, 255), -1);
 
 
 		namedWindow("Normal", 1);

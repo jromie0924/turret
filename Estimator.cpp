@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <math.h>
 
 //Local
 #include "Estimator.h"
@@ -26,7 +27,7 @@ Estimator::~Estimator(){
 	// Do nothing
 }
 
-void Estimator::convertToMatrix(Mat& frame, int** matrix) {
+void Estimator::convertToMatrix(Mat& frame, int** matrix, vector<Coords>& hits) {
 
 	// Rows x Columns
 	const unsigned int ROWS = BScan::ROWS;
@@ -37,6 +38,7 @@ void Estimator::convertToMatrix(Mat& frame, int** matrix) {
 		for(int col = 0; col < frame.cols; col += BScan::DIM_X) {
 			Scalar color = frame.at<unsigned char>(row, col);
 			if(color.val[0] != 0) {
+				hits.push_back(Coords(nextRow, nextCol));
 				matrix[nextRow][nextCol++] = 1;
 			} else {
 				matrix[nextRow][nextCol++] = 0;
@@ -45,6 +47,8 @@ void Estimator::convertToMatrix(Mat& frame, int** matrix) {
 		nextRow++;
 		nextCol = 0;
 	}
+
+	numMovement = hits.size();
 
 /*
 	// Cool binary representation of motion detector output in the terminal
@@ -58,6 +62,10 @@ void Estimator::convertToMatrix(Mat& frame, int** matrix) {
 
 }
 
+// Calculates line of best fit in the matrix (treating it as a grid).
+// Then it iterates through the rows and finds the row which contains the most
+// movement. That horizontal line (y = c) will intersect with the regression line
+// at the point where the target is to be estimated.
 Coords Estimator::estimateTarget(Mat& frame) {
 
 	// Rows x Columns
@@ -70,95 +78,68 @@ Coords Estimator::estimateTarget(Mat& frame) {
 	}
 
 	Coords coords;
-	convertToMatrix(frame, matrix);
-	//int colScanMat[COLS];
-	//int rowScanMat[ROWS];
-	vector<int> colScanMat (COLS);
-	vector<int> rowScanMat (ROWS);
-	int sum;
-	int max;
-	int next = 0;
-	vector<int> pos;
+	vector<Coords> movement;
+	convertToMatrix(frame, matrix, movement);
 
+	double xTotal = 0;
+	double yTotal = 0;
+	double xyTotal = 0;
+	double xSquaredTotal = 0;
+	double xMean;
+	double yMean;
+	double xSquaredMean;
+	double xMeanSquared;
+	double xyMean;
+	double b;
+	double m;
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// COLUMN ESTIMATION
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	for(int a = 0; a < numMovement; a++) {
+		Coords i = movement.at(a);
+		xTotal += i.col;
+		yTotal += i.row;
+		xSquaredTotal += (double)(pow(i.col, 2));
+		xyTotal += (i.col * i.row);
+	}
 
-	// Scan the columns of the matrix
-	for(int col = 0; col < COLS; col++) {
-		for(int row = 0; row < ROWS; row++) {
-			if(matrix[row][col] == 1) {
-				colScanMat.at(col)++;
+	xMean = xTotal / numMovement;
+	yMean = yTotal / numMovement;
+	xSquaredMean = xSquaredTotal / numMovement;
+	xyMean = xyTotal / numMovement;
+	xMeanSquared = (double)(pow(xMean, 2));
+
+	m = (xMean * yMean - xyMean) / (xMeanSquared - xSquaredMean);
+	b = yMean - (m * xMean);
+
+	//---------------------------------------------
+	// Now we have a linear equation y = mx + b
+	//---------------------------------------------
+
+	struct Pair {
+		int actionHits;
+		int row;
+	};
+
+	// Iterate through rows
+	struct Pair maxHits;
+	maxHits.actionHits = 0;
+	maxHits.row = 0;
+	for(int r = 0; r < ROWS; r++) {
+		int count = 0;
+		for(int c = 0; c < COLS; c++) {
+			if(matrix[r][c] == 1) {
+				count++;
 			}
 		}
-	}
-
-	// Get the maximum value in the col array
-	max = 0;
-	for(int a = 0; a < COLS; a++) {
-		if(colScanMat.at(a) > max) {
-			max = colScanMat.at(a);
+		if(count > maxHits.actionHits) {
+			maxHits.actionHits = count;
+			maxHits.row = r;
 		}
 	}
 
-	// Retrieve all locations of maximum value
-	for(int a = 0; a < COLS; a++) {
-		if(colScanMat.at(a) == max) {
-			pos.push_back(a);
-			next++;
-		}
-	}
+	int c = maxHits.row;
+	int x = floor((c - b) / m);
 
-	// Average the coordinate values
-	sum = 0;
-	for(int a = 0; a < next; a++) {
-		sum += colScanMat.at(pos.at(a));
-	}
-
-	int colAvg = sum / next;
-
-	pos.clear();
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// ROW ESTIMATION
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-	// Do the same for rows
-	for(int row = 0; row < ROWS; row++) {
-		for(int col = 0; col < COLS; col++) {
-			if(matrix[row][col] == 1) {
-				rowScanMat.at(row)++;
-			}
-		}
-	}
-
-	// Get the max count for the row count array
-	max = 0;
-	for(int a = 0; a < ROWS; a++) {
-		if(rowScanMat.at(a) > max) {
-			max = rowScanMat.at(a);
-		}
-	}
-
-	// Get positions of all occurances of the max value
-	next = 0;
-	for(int a = 0; a < ROWS; a++) {
-		if(rowScanMat.at(a) == max) {
-			pos.push_back(a);
-			next++;
-		}
-	}
-
-	// Get the average position
-	sum = 0;
-	for(int a = 0; a < next; a++) {
-		sum += rowScanMat.at(pos.at(a));
-	}
-
-	int rowAvg = sum / next;
-
-	coords.setCoords(rowAvg, colAvg);
+	coords.setCoords(c, x);
 
 	// Delete the 2D array
 	for(int i = 0; i < ROWS; i++) {
