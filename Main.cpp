@@ -15,7 +15,7 @@
 #include "Estimator.h"
 #include "Coords.h"
 
-#define MAX_LEN 10
+#define MAX_LEN 5
 
 using namespace std;
 using namespace cv;
