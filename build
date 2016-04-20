@@ -5,7 +5,7 @@ clear
 
 
 #for debugging
-#g++ -g Main.cpp BScan.cpp Coords.cpp Estimator.cpp -std=c++11 -o execute.app `pkg-config --cflags --libs opencv`
+#g++ -g Main.cpp BScan.cpp Coords.cpp Estimator.cpp Comm.cpp -std=c++11 -o execute.app `pkg-config --cflags --libs opencv`
 
 #release
-g++ Main.cpp BScan.cpp Coords.cpp Estimator.cpp -std=c++11 -o execute.app `pkg-config --cflags --libs opencv`
+g++ Main.cpp BScan.cpp Coords.cpp Estimator.cpp Comm.cpp -std=c++11 -o execute.app `pkg-config --cflags --libs opencv`

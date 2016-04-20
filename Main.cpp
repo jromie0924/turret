@@ -9,13 +9,15 @@
 #include <sstream>
 #include <unistd.h>
 #include <deque>
+#include <cstring>
 
 // Local
 #include "BScan.h"
 #include "Estimator.h"
 #include "Coords.h"
+#include "Comm.h"
 
-#define MAX_LEN 10
+#define MAX_LEN 5
 
 using namespace std;
 using namespace cv;
@@ -108,6 +110,18 @@ void Main::processFeed(void) {
 
 		rectangle(frame, Point(col * BScan::DIM_X, row * BScan::DIM_Y), Point((col + 1) * BScan::DIM_X, (row + 1) * BScan::DIM_Y), Scalar(0, 0, 255), -1);
 
+		// Generate the data
+		stringstream convertRow;
+		stringstream convertCol;
+		convertRow << to_string(row);
+		convertRow << ",";
+		convertCol << to_string(col);
+		convertRow << convertCol.str();
+		string data = convertRow.str();
+
+		// Send the data!
+		Comm comm;
+		comm.sendData(data.c_str());
 
 		namedWindow("Normal", 1);
 		//namedWindow("Motion Tracking", 1);

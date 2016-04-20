@@ -116,13 +116,15 @@ Coords Estimator::estimateTarget(Mat& frame) {
 
 	struct Pair {
 		int actionHits;
-		int row;
+		//int row;
 	};
 
 	// Iterate through rows
 	struct Pair maxHits;
+	vector<int> rows;
+	int maxCount = 0;
 	maxHits.actionHits = 0;
-	maxHits.row = 0;
+	//maxHits.row = 0;
 	for(int r = 0; r < ROWS; r++) {
 		int count = 0;
 		for(int c = 0; c < COLS; c++) {
@@ -132,11 +134,27 @@ Coords Estimator::estimateTarget(Mat& frame) {
 		}
 		if(count > maxHits.actionHits) {
 			maxHits.actionHits = count;
-			maxHits.row = r;
+			rows.clear();
+			rows.push_back(r);
+			//maxHits.row = r;
+		} else if(count == maxHits.actionHits) {
+			maxCount++;
+			rows.push_back(r);
 		}
 	}
 
-	int c = maxHits.row;
+	int c;
+
+	if(rows.size() > 1) {
+		int rowSum = 0;
+		for(int a = 0; a < rows.size(); a++) {
+			rowSum += rows.at(a);
+		}
+		c = rowSum / rows.size();
+	} else {
+		c = rows.at(0);
+	}
+
 	int x = floor((c - b) / m);
 
 	coords.setCoords(c, x);

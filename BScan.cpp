@@ -14,7 +14,7 @@
 using namespace std;
 using namespace cv;
 
-float minRatio = 0.7f;
+float minRatio = 0.5f;
 
 const int BScan::DIM_X = 15;
 const int BScan::DIM_Y = 15;
