@@ -1,5 +1,0 @@
-#!/bin/bash
-
-clear
-
-g++ -o receiver Receiver.cpp -std=c++11
