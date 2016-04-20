@@ -6,7 +6,7 @@
 #define PORT 2512
 
 char ssid[] = "cuddles";
-char pass[] = "passwordnigga";
+char pass[] = "subaruwrx";
 
 int status = WL_IDLE_STATUS;
 char packetBuffer[256];
