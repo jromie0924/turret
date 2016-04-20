@@ -2,4 +2,4 @@
 
 clear
 
-g++ -o comm Comm.cpp -std=c++11
+g++ -o comm.app Comm.cpp -std=c++11

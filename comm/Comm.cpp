@@ -5,6 +5,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <cstring>
+#include <string>
 
 #include "Comm.h"
 
@@ -22,7 +24,7 @@ Comm::~Comm() {
 	// Do nothing
 }
  
-void Comm::socketConnect(int x) {
+void Comm::socketConnect(char* x) {
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd < 0) {
 		cerr << "Error openining socket." << endl;
@@ -44,7 +46,8 @@ void Comm::socketConnect(int x) {
 
 	bzero(buffer, 256);
 
-	int retVal = snprintf(buffer, sizeof(buffer), "%d", x);
+	int retVal = snprintf(buffer, sizeof(buffer), "%s", x);
+	cout << buffer << endl;
 
 	retVal = write(sockfd, buffer, strlen(buffer));
 	//int convX = htonl(x);
@@ -60,7 +63,10 @@ int main() {
 	cout << "Connecting..." << endl;
 	for(int a = 0; ; a++) {
 		Comm c;
-		c.socketConnect(a);
+		string msg = "123456";
+		char* cMsg = new char[msg.length() + 1];
+		strcpy(cMsg, msg.c_str());
+		c.socketConnect(cMsg);
 	}
 
 	return 0;
