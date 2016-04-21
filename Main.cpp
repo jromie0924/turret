@@ -123,9 +123,9 @@ void Main::processFeed(void) {
 		Comm comm;
 		comm.sendData(data.c_str());
 
-		namedWindow("Normal", 1);
+		namedWindow("Press Q or Esc to exit", 1);
 		//namedWindow("Motion Tracking", 1);
-		imshow("Normal", frame);
+		imshow("Press Q orEsc to exit", frame);
 		//imshow("Motion Tracking", mask);
 		if(counter < MAX_LEN) {
 			counter++;
