@@ -125,7 +125,7 @@ void Main::processFeed(void) {
 
 		namedWindow("Press Q or Esc to exit", 1);
 		//namedWindow("Motion Tracking", 1);
-		imshow("Press Q orEsc to exit", frame);
+		imshow("Press Q or Esc to exit", frame);
 		//imshow("Motion Tracking", mask);
 		if(counter < MAX_LEN) {
 			counter++;
