@@ -1,31 +1,42 @@
+// Arduino Libraries
 #include <WiFi.h>
 #include <WiFiUDP.h>
+#include <Servo.h>
+
+// C
 #include <string.h>
+#include <stdio.h>
 
 #define LED_PIN 42
+#define LASER 8
+#define SERVO_PIN 9
 #define PORT 2512
 
+//-----------GLOBALS----------------
 char ssid[] = "cuddles";
 char pass[] = "subaruwrx";
-
-int status = WL_IDLE_STATUS;
 char packetBuffer[256];
-
-WiFiUDP udp;
-
 const int THRESH = 3;
-
 int count = 1;
-
+WiFiUDP udp;
+int status = WL_IDLE_STATUS;
 // Asserted IP address
 IPAddress ip(10, 42, 0, 34);
 //WiFiServer server(PORT);
 bool isConnected = false;
 char buff[255];
+Servo servo;
+//----------------------------------
 
 void setup() {
   // initialize serial:
   Serial.begin(9600);
+
+  servo.attach(SERVO_PIN);
+  servo.write(90);
+
+  pinMode(LASER, OUTPUT);
+  digitalWrite(LASER, HIGH);
   
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
@@ -35,14 +46,11 @@ void setup() {
   // attempt to connect using WPA2 encryption:
   Serial.println("Attempting to connect to WPA network...");
   status = WiFi.begin(ssid, pass);
-
-  // if you're not connected, stop here:
+  
   if ( status != WL_CONNECTED) { 
     Serial.println("Couldn't get a wifi connection");
     while(true);
-  } 
-  // if you are connected, print out info about the connection:
-  else {
+  } else {
     Serial.println("Connected to network");
     digitalWrite(42, HIGH);
    int a = WiFi.getSocket();
@@ -67,7 +75,16 @@ void loop() {
     if(len > 0) {
       packetBuffer[len] = 0;
     }
-    Serial.println(packetBuffer);
+    //Serial.println(packetBuffer);
+    char* coord;
+    coord = strtok(packetBuffer, ",");
+    int y = atoi(coord);
+    coord = strtok(NULL, ",");
+    int x = atoi(coord);
+    if(x != 429496729) {
+      servo.write(x);
+    }
+    delay(20);
   }
 }
 
