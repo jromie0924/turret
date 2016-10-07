@@ -4,6 +4,7 @@
 #include "opencv2/videoio.hpp"
 #include <opencv2/highgui.hpp>
 #include <opencv2/video.hpp>
+
 // C++
 #include <iostream>
 #include <sstream>
@@ -123,9 +124,9 @@ void Main::processFeed(void) {
 		Comm comm;
 		comm.sendData(data.c_str());
 
-		namedWindow("Normal", 1);
+		namedWindow("Press Q or Esc to exit", 1);
 		//namedWindow("Motion Tracking", 1);
-		imshow("Normal", frame);
+		imshow("Press Q or Esc to exit", frame);
 		//imshow("Motion Tracking", mask);
 		if(counter < MAX_LEN) {
 			counter++;
