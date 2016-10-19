@@ -1,30 +1,28 @@
-OPENCV_INCLUDEPATH = /usr/local/include
-OPENCV_LIBPATH = /usr/local/lib
+TARGET    = MotionDetector.app
+SRC_DIR   = src
+OBJ_DIR   = obj
 
-CC = g++
-CFLAGS = -std=c++11 `pkg-config --cflags --libs opencv` -I $(OPENCV_INCLUDEPATH) -L $(OPENCV_LIBPATH)
-HEADERS = $(wildcard *.h)
-SOURCES = $(wildcard *.cpp)
-OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = MotionDetector.app
-# For debugging
-#CFLAGS += -g
+NVCC			= nvcc
 
-.PHONY: default all clean
+CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+CU_FILES  = $(wildcard $(SRC_DIR)/*.cu)
 
-default: $(EXECUTABLE)
+H_FILES   = $(wildcard $(SRC_DIR)/*.h)
+CUH_FILES = $(wildcard $(SRC_DIR)/*.cuh)
 
-all: default
+OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(notdir $(CPP_FILES:.cpp=.o)))
+CUO_FILES = $(addprefix $(OBJ_DIR)/,$(notdir $(CU_FILES:.cu=.cu.o)))
 
-%.o: %.cpp $(HEADERS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+OBJS =  $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(notdir $(CPP_FILES)))
+OBJS += $(patsubst %.cu,$(OBJ_DIR)/%.cu.o,$(notdir $(CU_FILES)))
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(CFLAGS) -Wall -o $@
+$(TARGET) : $(OBJS)
+	echo "linking rule : " -o $@ $?
+#	$(NVCC)
+$(OBJ_DIR)/%.cu.o : $(SRC_DIR)/%.cu $(CUH_FILES)
+	echo ".cu.o rule : " $@ $<
+	touch $@
 
-
-
-clean:
-	-rm -f *.o
-	-rm -f $(EXECUTABLE)
-
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp $(H_FILES)
+	echo ".o rule : " $@ $<
+	touch $@
