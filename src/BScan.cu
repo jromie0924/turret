@@ -26,12 +26,12 @@ __global__ void scan_kernel(unsigned char* g_img, int size, int t_size) {
 
   // Copy to shared memory
   int s_pos = threadIdx.x + threadIdx.y * blockDim.y;
-  s_tile[s_pose] = g_img[i + j * size];
+  s_tile[s_pos] = g_img[i + j * size];
 
   //__syncthreads();
 
   // Operate on shared memory
-  if(s_tile[s_pose] == 255) {
+  if(s_tile[s_pos] == 255) {
     white = 1;
   } else {
     black = 1;
@@ -52,9 +52,9 @@ __global__ void scan_kernel(unsigned char* g_img, int size, int t_size) {
 
   __syncthreads();
 
-  s_tile[s_pose] = blockColor;
+  s_tile[s_pos] = blockColor;
 
-  g_img[i + j * t_size] = s_tile[s_pose];
+  g_img[i + j * t_size] = s_tile[s_pos];
 }
 
 // Set up and call the GPU kernel
