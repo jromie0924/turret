@@ -31,4 +31,5 @@
 *.png
 *.jpg
 
+# Directory for old files that serve as a good reference; to ignore in version control
 ignore/*
