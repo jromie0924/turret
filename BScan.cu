@@ -8,25 +8,37 @@
 // C
 #include <stdio.h>
 
+// Local
+#include "BScan.cuh"
+
 const float MIN_RATIO = 0.5f;
-const int BScan::TILE_SIZE = 16;
+const int TILE_SIZE = 16;
 
-__global__ void scan_kernel(unsigned char* g_img, int size, int t_size) {
+BScan::BScan(Mat f) {
+	// copy f to local frame var
+	frame = f.clone();
+
+	//copy frame to mask
+	mask = frame.clone();
+}
+
+__global__ void scan_kernel(unsigned char* g_img) {
   int i = threadIdx.x + blockIdx.x * blockDim.x;
-  int j = threadidx.y + blockIdx.y * blockDim.y;
+  int j = threadIdx.y + blockIdx.y * blockDim.y;
 
-  int int white = 0;
+  int white = 0;
   int black = 0;
-  __shared__ unsigned char blockColor = 0;
+  __shared__ unsigned char blockColor;
   __shared__ int count_white;
   __shared__ int count_black;
-
-  // Shared memory allocation
-  __shared__ unsigned char* s_tile[t_size * t_size];
+  __shared__ unsigned char s_tile[TILE_SIZE * TILE_SIZE];
+  blockColor = 0;
+  count_white = 0;
+  count_black = 0;
 
   // Copy to shared memory
   int s_pos = threadIdx.x + threadIdx.y * blockDim.y;
-  s_tile[s_pos] = g_img[i + j * size];
+  s_tile[s_pos] = g_img[i + j * TILE_SIZE];
 
   //__syncthreads();
 
@@ -45,7 +57,7 @@ __global__ void scan_kernel(unsigned char* g_img, int size, int t_size) {
   __syncthreads();
 
   if(threadIdx.x == 0) {
-    if((float)count_white + (float)count_white + (float)count_black > MIN_RATIO) {
+    if((float)count_white / ((float)count_white + (float)count_black) > MIN_RATIO) {
       blockColor = 255;
     }
   }
@@ -54,16 +66,16 @@ __global__ void scan_kernel(unsigned char* g_img, int size, int t_size) {
 
   s_tile[s_pos] = blockColor;
 
-  g_img[i + j * t_size] = s_tile[s_pos];
+  g_img[i + j * TILE_SIZE] = s_tile[s_pos];
 }
 
 // Set up and call the GPU kernel
-cv::Mat scanIt(cv::Mat* frame) {
-  unsigned char* h_frame = *frame.data;
+cv::Mat BScan::scanIt() {
+  unsigned char* h_frame = frame.data;
 
-  int numPixels = *frame.total()
-  int numRows = *frame.rows;
-  int numCols = *frame.cols;
+  int numPixels = frame.total();
+  int numRows = frame.rows;
+  int numCols = frame.cols;
 
   unsigned char* d_frame;
   cudaMalloc(&d_frame, numPixels * sizeof(unsigned char));
@@ -83,4 +95,15 @@ cv::Mat scanIt(cv::Mat* frame) {
   free(output);
 
   return retMat;
+}
+
+cv::Size BScan::getDims() {
+  int rows = frame.rows / TILE_SIZE;
+  int cols = frame.cols / TILE_SIZE;
+
+  cv::Size sz;
+  sz.height = rows;
+  sz.width = cols;
+
+  return sz;
 }

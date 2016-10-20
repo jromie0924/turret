@@ -14,13 +14,15 @@
 //Local
 #include "Estimator.h"
 #include "Coords.h"
-#include "BScan.h"
+#include "BScan.cuh"
 
 using namespace std;
 using namespace cv;
 
-Estimator::Estimator() {
-	// Do Nothing
+Estimator::Estimator(int numRows, int numCols, int blksize) {
+	rows = numRows;
+	cols = numCols;
+	block_size = blksize;
 }
 
 Estimator::~Estimator(){
@@ -30,12 +32,12 @@ Estimator::~Estimator(){
 void Estimator::convertToMatrix(Mat& frame, int** matrix, vector<Coords>& hits) {
 
 	// Rows x Columns
-	const unsigned int ROWS = BScan::ROWS;
-	const unsigned int COLS = BScan::COLS;
+	const unsigned int ROWS = rows;
+	const unsigned int COLS = cols;
 	int nextRow = 0;
 	int nextCol = 0;
-	for(int row = 0; row < frame.rows; row += BScan::DIM_Y) {
-		for(int col = 0; col < frame.cols; col += BScan::DIM_X) {
+	for(int row = 0; row < frame.rows; row += block_size) {
+		for(int col = 0; col < frame.cols; col += block_size) {
 			Scalar color = frame.at<unsigned char>(row, col);
 			if(color.val[0] != 0) {
 				hits.push_back(Coords(nextRow, nextCol));
@@ -69,8 +71,8 @@ void Estimator::convertToMatrix(Mat& frame, int** matrix, vector<Coords>& hits) 
 Coords Estimator::estimateTarget(Mat& frame) {
 
 	// Rows x Columns
-	const int ROWS = BScan::ROWS;
-	const int COLS = BScan::COLS;
+	const int ROWS = rows;
+	const int COLS = cols;
 
 	int** matrix = new int*[ROWS];
 	for(int i = 0; i < ROWS; i++) {

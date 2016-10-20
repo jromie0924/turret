@@ -19,14 +19,17 @@ using namespace cv;
 
 class Estimator {
 public:
-	Estimator();
+	Estimator(int, int, int);
 	~Estimator();
 	Coords estimateTarget(Mat&);
 
 private:
 	void convertToMatrix(Mat&, int**, vector<Coords>&);
+	int rows;
+	int cols;
 	const int X_MAX = 43;
 	const int Y_MAX = 32;
+	int block_size;
 
 	int numMovement;
 };

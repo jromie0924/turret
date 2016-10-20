@@ -13,15 +13,15 @@
 #include <cstring>
 
 // Local
-#include "BScan.h"
+#include "BScan.cuh"
 #include "Estimator.h"
 #include "Coords.h"
-#include "Comm.h"
-
-#define MAX_LEN 5
+//#include "Comm.h"
 
 using namespace std;
 using namespace cv;
+
+const int MAX_LEN = 5;
 
 class Main {
 public:
@@ -35,6 +35,8 @@ private:
 	Mat frame, fgMaskMOG2, mask;
 
 	const int CAMERA = 0;
+
+	int block_size = 16;
 
 	Ptr<BackgroundSubtractorMOG2> pMOG2;
 	int keyboard;
@@ -87,12 +89,16 @@ void Main::processFeed(void) {
 		BScan scanner(fgMaskMOG2);
 
 		mask = scanner.scanIt();
-		
+
 		//rectangle(mask, cv::Point(10, 2), cv::Point(100,20), cv::Scalar(255,255,255), -1);
 		//string recStr = to_string(*horiz) + ", " + to_string(*vert);
 		//putText(mask, recStr, cv::Point(15, 15), FONT_HERSHEY_SIMPLEX, 0.5 , cv::Scalar(0,0,0));
 
-		Estimator estimator;
+		cv::Size dims = scanner.getDims();
+		int dim_x = dims.width;
+		int dim_y = dims.height;
+
+		Estimator estimator(dim_y, dim_x, block_size);
 
 		Coords coords = estimator.estimateTarget(mask);
 
@@ -109,7 +115,7 @@ void Main::processFeed(void) {
 		int row = rowAvg();
 		int col = colAvg();
 
-		rectangle(frame, Point(col * BScan::DIM_X, row * BScan::DIM_Y), Point((col + 1) * BScan::DIM_X, (row + 1) * BScan::DIM_Y), Scalar(0, 0, 255), -1);
+		rectangle(frame, Point(col * dim_x, row * dim_y), Point((col + 1) * dim_x, (row + 1) * dim_y), Scalar(0, 0, 255), -1);
 
 		// Generate the data
 		stringstream convertRow;
@@ -121,8 +127,8 @@ void Main::processFeed(void) {
 		string data = convertRow.str();
 
 		// Send the data!
-		Comm comm;
-		comm.sendData(data.c_str());
+		//Comm comm;
+		//comm.sendData(data.c_str());
 
 		namedWindow("Press Q or Esc to exit", 1);
 		//namedWindow("Motion Tracking", 1);

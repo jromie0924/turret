@@ -15,23 +15,22 @@ using namespace cv;
 
 class BScan {
 private:
-	//original matrix
+	// Original matrix
 	Mat frame;
 
-	//matrix to be modified
+	// Matrix to be modified
 	Mat mask;
-
 
 public:
 	//integer values to keep track of the location of white blocks
-	int x, y;
+	//int x, y;
 	BScan(Mat);
 
 	//scanning function returns a pointer to the masked matrix
 	Mat scanIt();
+	cv::Size getDims();
 
 	//static const int ROWS;
 	//static const int COLS;
-	static const int TILE_SIZE;
 	//static const int DIM_Y;
 };
