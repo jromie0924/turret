@@ -1,5 +1,9 @@
-PROGRAM_NAME := program_name
+# Credit for most of this Makefile goes to Adam McLaughlin
+# https://github.com/Adam27X/CUDA-Cpp-Makefile
 
+PROGRAM_NAME := MotonDetector.app
+OPENCV_LIB = /usr/local/lib
+OPENCV_INCLUDE = /usr/local/include
 program_CXX_SRCS := $(wildcard *.cpp)
 #program_CXX_SRCS += $(wildcard ../../*.cpp) #Find C++ source files from additonal directories
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
@@ -10,8 +14,9 @@ program_CU_SRCS := $(wildcard *.cu)
 #program_CU_HEADERS += $(wildcard ../../*.cuh) #Find .cuh files from additional directories
 program_CU_OBJS := ${program_CU_SRCS:.cu=.cuo}
 
-program_INCLUDE_DIRS := . /usr/local/cuda-7.5/include #C++ Include directories
+program_INCLUDE_DIRS := . /usr/local/cuda-7.5/include $(OPENCV_INCLUDE) #C++ Include directories
 #program_CU_INCLUDE_DIRS := /home/users/amclaugh/CUB/cub-1.3.2/ #CUDA Include directories
+program_LIBS := $(OPENCV_LIBS)
 
 # Compiler flags
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
@@ -21,6 +26,8 @@ GEN_SM35 := -gencode=arch=compute_35,code=\"sm_35,compute_35\" #Target CC 3.5, f
 NVFLAGS := -O3 -rdc=true #rdc=true needed for separable compilation
 NVFLAGS += $(GEN_SM35)
 NVFLAGS += $(foreach includedir,$(program_CU_INCLUDE_DIRS),-I$(includedir))
+NVFLAGS += $(foreach libdir,$(program_LIBS),-L$(libdir))
+NVFLAGS += `pkg-config --cflags --libs opencv`
 
 CUO_O_OBJECTS := ${program_CU_OBJS:.cuo=.cuo.o}
 
