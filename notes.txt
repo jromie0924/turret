@@ -1,2 +1,0 @@
-in 15x15 pixel blocks:
-there are 32 rows and 43 columns
