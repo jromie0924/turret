@@ -17,6 +17,8 @@ class FrameProcessor:
         self.starting_time = time.time()
         self.frame_id = 0
 
+        self.show_boxes = config.show_object_boxes
+
         layer_names = self.net.getLayerNames()
         self.outputlayers = [layer_names[i - 1] for i in self.net.getUnconnectedOutLayers()]
 
@@ -63,12 +65,20 @@ class FrameProcessor:
                 x,y,w,h = boxes[i]
                 label = str(self.classes[class_ids[i]])
                 confidence = confidences[i]
-                color = self.colors[class_ids[i]]
-                cv2.rectangle(frame, (x,y), (x+w, y+h), color, 2)
-                cv2.putText(frame, label+" "+str(round(confidence,2)),(x,y+30), self.font,1,(255,255,255),2)
+                box_color = (0, 255, 0) # Green
+                target_color = (0, 0, 255) # Red (the format is BGR for some reason)
+                target_start_x = int(x + w/2 - 5)
+                target_start_y = int(y + h/2 - 5)
+                target_end_x = int(target_start_x + 10)
+                target_end_y = int(target_start_y + 10)
+                if self.show_boxes:
+                    cv2.rectangle(frame, (x,y), (x+w, y+h), box_color, 2)
+                    cv2.putText(frame, f"{label} {str(round(confidence,2))}",(x,y+30), self.font, 1, (255,255,255), 2)
+                cv2.rectangle(frame, (target_start_x, target_start_y), (target_end_x, target_end_y), target_color, 2)
+                cv2.putText(frame, "Target", (target_start_x, target_start_y - 8), self.font, 1, (255, 255, 255), 2)
         elapsed_time = time.time() - self.starting_time
         fps = self.frame_id / elapsed_time
-        cv2.putText(frame,"FPS:"+str(round(fps,2)),(10,50),self.font,2,(0,0,0),1)
+        cv2.putText(frame,f"FPS:{str(round(fps,2))}",(10,50),self.font,2,(0,0,0),1)
         return frame
 
 

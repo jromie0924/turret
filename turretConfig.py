@@ -2,7 +2,7 @@ import cv2
 
 class TurretConfig:
     def __init__(self) -> None:
-        pass
+        self.show_object_boxes = False
 
 
     def load_neural_net(self):
