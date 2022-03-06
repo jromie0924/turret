@@ -6,6 +6,8 @@ from turretCam import TurretCam
 
 class FrameProcessor:
     def __init__(self):
+        self.ACCEPTED_CLASSES=['person']
+
         config = TurretConfig()
         self.net = config.load_neural_net()
         self.classes = config.load_classes()
@@ -40,7 +42,7 @@ class FrameProcessor:
                 scores = detection[5:]
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
-                if confidence > 0.3: # tuneable
+                if confidence > 0.3 and self.classes[class_id].lower() in self.ACCEPTED_CLASSES:
                     # object detected
                     center_x = int(detection[0] * width)
                     center_y = int(detection[1] * height)
