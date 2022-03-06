@@ -14,7 +14,7 @@ class FrameProcessor:
         self.classes = config.load_classes()
         self.camera = TurretCam()
         self.font = cv2.FONT_HERSHEY_PLAIN
-        self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
+        # self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
         self.starting_time = time.time()
         self.frame_id = 0
 
