@@ -58,6 +58,7 @@ class FrameProcessor:
                     confidences.append(float(confidence)) # add detection confidence
                     class_ids.append(class_id) # name of the object that was detected
 
+        # Acquire non maximum suppression boxes around detected objects
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.6)
 
         for i in range(len(boxes)):
