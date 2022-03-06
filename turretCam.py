@@ -1,5 +1,6 @@
 import cv2
 
+
 class TurretCam:
     def __init__(self):
         self.vid = cv2.VideoCapture(0)
