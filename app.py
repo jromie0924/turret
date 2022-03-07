@@ -22,4 +22,8 @@ def stop():
 
 
 if __name__ == '__main__':
-    start()
+    try:
+        start()
+    except KeyboardInterrupt:
+        stop()
+        exit(0)
