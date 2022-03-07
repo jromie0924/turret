@@ -67,27 +67,28 @@ class FrameProcessor:
         # Acquire non maximum suppression boxes around detected objects
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.6)
 
-        for i in range(len(boxes)):
-            if i in indexes:
-                x, y, w, h = boxes[i]
-                label = str(self.classes[class_ids[i]])
-                confidence = confidences[i]
-                box_color = (0, 255, 0)  # Green
+        # for i in range(len(boxes)):
+        for i in indexes:
+            # if i in indexes:
+            x, y, w, h = boxes[i]
+            label = str(self.classes[class_ids[i]])
+            confidence = confidences[i]
+            box_color = (0, 255, 0)  # Green
+            if self.show_target_points:
                 # Red (the format is BGR for some reason)
-                if self.show_target_points:
-                    target_color = (0, 0, 255)
-                    target_start_x = int(x + w/2 - 5)
-                    target_start_y = int(y + h/2 - 5)
-                    target_end_x = int(target_start_x + 10)
-                    target_end_y = int(target_start_y + 10)
-                    cv2.rectangle(frame, (target_start_x, target_start_y),
-                                    (target_end_x, target_end_y), target_color, 2)
-                    cv2.putText(frame, "Target", (target_start_x,
-                                target_start_y - 8), self.font, 1, (255, 255, 255), 2)
-                if self.show_boxes:
-                    cv2.rectangle(frame, (x, y), (x+w, y+h), box_color, 2)
-                    cv2.putText(frame, f"{label} {str(round(confidence,2))}",
-                                (x, y+30), self.font, 1, (255, 255, 255), 2)
+                target_color = (0, 0, 255)
+                target_start_x = int(x + w/2 - 5)
+                target_start_y = int(y + h/2 - 5)
+                target_end_x = int(target_start_x + 10)
+                target_end_y = int(target_start_y + 10)
+                cv2.rectangle(frame, (target_start_x, target_start_y),
+                                (target_end_x, target_end_y), target_color, 2)
+                cv2.putText(frame, "Target", (target_start_x,
+                            target_start_y - 8), self.font, 1, (255, 255, 255), 2)
+            if self.show_boxes:
+                cv2.rectangle(frame, (x, y), (x+w, y+h), box_color, 2)
+                cv2.putText(frame, f"{label} {str(round(confidence,2))}",
+                            (x, y+30), self.font, 1, (255, 255, 255), 2)
         elapsed_time = time.time() - self.starting_time
         fps = self.frame_id / elapsed_time
         cv2.putText(frame, f"FPS:{str(round(fps, 2))}",
