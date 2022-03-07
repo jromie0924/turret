@@ -65,11 +65,10 @@ class FrameProcessor:
                     class_ids.append(class_id)
 
         # Acquire non maximum suppression boxes around detected objects
+        # Eliminates overlapping boxes
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.6)
 
-        # for i in range(len(boxes)):
         for i in indexes:
-            # if i in indexes:
             x, y, w, h = boxes[i]
             label = str(self.classes[class_ids[i]])
             confidence = confidences[i]
