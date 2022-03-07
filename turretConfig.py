@@ -4,6 +4,7 @@ import cv2
 class TurretConfig:
     def __init__(self) -> None:
         self.show_object_boxes = False
+        self.show_target_points = True
 
     def load_neural_net(self):
         # tiny yolo for speed optimization

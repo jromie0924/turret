@@ -19,6 +19,7 @@ class FrameProcessor:
         self.frame_id = 0
 
         self.show_boxes = config.show_object_boxes
+        self.show_target_points = config.show_target_points
 
         layer_names = self.net.getLayerNames()
         self.outputlayers = [layer_names[i - 1]
@@ -73,19 +74,20 @@ class FrameProcessor:
                 confidence = confidences[i]
                 box_color = (0, 255, 0)  # Green
                 # Red (the format is BGR for some reason)
-                target_color = (0, 0, 255)
-                target_start_x = int(x + w/2 - 5)
-                target_start_y = int(y + h/2 - 5)
-                target_end_x = int(target_start_x + 10)
-                target_end_y = int(target_start_y + 10)
+                if self.show_target_points:
+                    target_color = (0, 0, 255)
+                    target_start_x = int(x + w/2 - 5)
+                    target_start_y = int(y + h/2 - 5)
+                    target_end_x = int(target_start_x + 10)
+                    target_end_y = int(target_start_y + 10)
+                    cv2.rectangle(frame, (target_start_x, target_start_y),
+                                    (target_end_x, target_end_y), target_color, 2)
+                    cv2.putText(frame, "Target", (target_start_x,
+                                target_start_y - 8), self.font, 1, (255, 255, 255), 2)
                 if self.show_boxes:
                     cv2.rectangle(frame, (x, y), (x+w, y+h), box_color, 2)
                     cv2.putText(frame, f"{label} {str(round(confidence,2))}",
                                 (x, y+30), self.font, 1, (255, 255, 255), 2)
-                cv2.rectangle(frame, (target_start_x, target_start_y),
-                              (target_end_x, target_end_y), target_color, 2)
-                cv2.putText(frame, "Target", (target_start_x,
-                            target_start_y - 8), self.font, 1, (255, 255, 255), 2)
         elapsed_time = time.time() - self.starting_time
         fps = self.frame_id / elapsed_time
         cv2.putText(frame, f"FPS:{str(round(fps, 2))}",
