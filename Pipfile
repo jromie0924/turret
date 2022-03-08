@@ -5,8 +5,8 @@ name = "pypi"
 
 [packages]
 numpy = "*"
-yolo34py = "*"
 imutils = "*"
+yolo34py-gpu = "*"
 
 [dev-packages]
 autopep8 = "*"
