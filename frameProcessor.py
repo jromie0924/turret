@@ -32,7 +32,7 @@ class FrameProcessor:
         height, width, channels = frame.shape
 
         # blob = cv2.dnn.blobFromImage(frame, 0.00392, (320, 320), (0, 0, 0), True, crop=False)
-        blob = cv2.dnn.blobFromImage(image=frame, scalefactor=0.01, size=(
+        blob = cv2.dnn.blobFromImage(image=frame, scalefactor=0.00392, size=(
             320, 320), mean=(0, 0, 0), swapRB=True, crop=False)
 
         self.net.setInput(blob)
@@ -48,7 +48,7 @@ class FrameProcessor:
                 scores = detection[5:]
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
-                if confidence > 0.3 and self.classes[class_id].lower() in self.ACCEPTED_CLASSES:
+                if confidence > 0.4 and self.classes[class_id].lower() in self.ACCEPTED_CLASSES:
                     # object detected
                     center_x = int(detection[0] * width)
                     center_y = int(detection[1] * height)
