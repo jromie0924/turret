@@ -7,7 +7,7 @@ Utilizes the YOLO classifying algorithm to identify possible targets.
 NOTE: This requires Python 3.8, as well as an NVIDIA GPU that has CUDA cores.
 
 ### Install pipenv
-`pip3 install pipenv`
+`sudo pip3 install pipenv`
 
 ### Install OpenCV for Python
 1. Activate pipenv virtual environment (`pipenv shell`)
