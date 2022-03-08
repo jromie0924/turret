@@ -10,7 +10,7 @@ NOTE: This requires Python 3.8, as well as an NVIDIA GPU that has CUDA cores.
 `pip3 install pipenv`
 
 ### Install OpenCV for Python
-1. Activate pipenv virtual environment
+1. Activate pipenv virtual environment (`pipenv shell`)
 2. `python -m pip install opencv-python`
 3. Test that it works: `python -c "import cv2; print(cv2.__version__)"`
 
