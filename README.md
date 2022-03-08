@@ -17,6 +17,13 @@ NOTE: This requires Python 3.8
 ### Install other packages
 `pipenv install`
 
+## Running
+
+1. `pipenv shell` (if you're not already inside the virtual environment)
+2. `python app.py`
+
+Note that it's helpful if you have a webcam plugged into your machine; the program will likely not like it if you don't.
+
 ## Troubleshooting
 You may run into an issue with `yolo34py-gpu` package.
 
