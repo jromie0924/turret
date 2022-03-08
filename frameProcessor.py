@@ -86,7 +86,7 @@ class FrameProcessor:
                 target_end_x = int(target_start_x + 10)
                 target_end_y = int(target_start_y + 10)
                 cv2.rectangle(frame, (target_start_x, target_start_y),
-                                (target_end_x, target_end_y), target_color, 2)
+                              (target_end_x, target_end_y), target_color, 2)
                 cv2.putText(frame, "Target", (target_start_x,
                             target_start_y - 8), self.font, 1, (255, 255, 255), 2)
             if self.show_boxes:
