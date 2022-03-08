@@ -32,7 +32,7 @@ class FrameProcessor:
         height, width, channels = frame.shape
 
         # blob = cv2.dnn.blobFromImage(frame, 0.00392, (320, 320), (0, 0, 0), True, crop=False)
-        blob = cv2.dnn.blobFromImage(image=frame, scalefactor=0.01, size=(
+        blob = cv2.dnn.blobFromImage(image=frame, scalefactor=0.00392, size=(
             320, 320), mean=(0, 0, 0), swapRB=True, crop=False)
 
         self.net.setInput(blob)
@@ -43,12 +43,18 @@ class FrameProcessor:
         confidences = []
         boxes = []
 
-        for out in outs:
+        iteration_counter = 0
+        actual_used_counter = 0
+        actual_idx = ""
+        for idx, out in enumerate(outs):
             for detection in out:
+                iteration_counter += 1
+                actual_idx = f"idx: {str(idx)}"
                 scores = detection[5:]
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
                 if confidence > 0.3 and self.classes[class_id].lower() in self.ACCEPTED_CLASSES:
+                    actual_used_counter += 1
                     # object detected
                     center_x = int(detection[0] * width)
                     center_y = int(detection[1] * height)
@@ -92,6 +98,10 @@ class FrameProcessor:
         fps = self.frame_id / elapsed_time
         cv2.putText(frame, f"FPS:{str(round(fps, 2))}",
                     (10, 50), self.font, 2, (0, 0, 0), 1)
+        cv2.putText(frame, f"iterations:{str(iteration_counter)}",
+                    (10, 70), self.font, 2, (0, 0, 0), 1)
+        cv2.putText(frame, f"idx of out used: {actual_idx}",
+                    (10, 90), self.font, 2, (0, 0, 0), 1)
         return frame
 
     def destroy(self):
