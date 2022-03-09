@@ -10,7 +10,7 @@ class FrameProcessor:
     def __init__(self):
         config = TurretConfig()
         self.serial = SerialComm()
-        self.accepted_classes = config.ACCEPTED_CLASSES
+        self.accepted_classes = config.accepted_classes
         self.net = config.load_neural_net()
         self.classes = config.load_classes()
         self.camera = TurretCam()
