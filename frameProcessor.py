@@ -3,6 +3,7 @@ import numpy as np
 import time
 from turretConfig import TurretConfig
 from turretCam import TurretCam
+from serialComm import SerialComm
 
 
 class FrameProcessor:
@@ -10,6 +11,7 @@ class FrameProcessor:
         self.ACCEPTED_CLASSES = ['person']
 
         config = TurretConfig()
+        self.serial = SerialComm()
         self.net = config.load_neural_net()
         self.classes = config.load_classes()
         self.camera = TurretCam()
@@ -23,6 +25,11 @@ class FrameProcessor:
         layer_names = self.net.getLayerNames()
         self.outputlayers = [layer_names[i - 1]
                              for i in self.net.getUnconnectedOutLayers()]
+
+    def sendCoordinates(self, x, y):
+        result = self.serial.feed_data(f'{x},{y}')
+        if not result:
+            raise Exception("Error communicating with Arduino")
 
     def capture_and_process(self):
         frame = self.camera.capture()
@@ -77,11 +84,16 @@ class FrameProcessor:
             label = str(self.classes[class_ids[i]])
             confidence = confidences[i]
             box_color = (0, 255, 0)  # Green
+
+            target_x = int(x + w/2)
+            target_y = int(y + h/2)
+            self.sendCoordinates(target_x, target_y)
+
             if self.show_target_points:
                 # Red (the format is BGR for some reason)
                 target_color = (0, 0, 255)
-                target_start_x = int(x + w/2 - 5)
-                target_start_y = int(y + h/2 - 5)
+                target_start_x = int(target_x - 5)
+                target_start_y = int(target_y - 5)
                 target_end_x = int(target_start_x + 10)
                 target_end_y = int(target_start_y + 10)
                 cv2.rectangle(frame, (target_start_x, target_start_y),
