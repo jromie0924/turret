@@ -8,10 +8,9 @@ from serialComm import SerialComm
 
 class FrameProcessor:
     def __init__(self):
-        self.ACCEPTED_CLASSES = ['person']
-
         config = TurretConfig()
         self.serial = SerialComm()
+        self.accepted_classes = config.ACCEPTED_CLASSES
         self.net = config.load_neural_net()
         self.classes = config.load_classes()
         self.camera = TurretCam()
@@ -47,17 +46,12 @@ class FrameProcessor:
         confidences = []
         boxes = []
 
-        iteration_counter = 0
-        actual_used_counter = 0
-        actual_idx = ""
         for idx, out in enumerate(outs):
             for detection in out:
-                iteration_counter += 1
-                actual_idx = f"idx: {str(idx)}"
                 scores = detection[5:]
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
-                if confidence > 0.4 and self.classes[class_id].lower() in self.ACCEPTED_CLASSES:
+                if confidence > 0.4 and self.classes[class_id].lower() in self.accepted_classes:
                     # object detected
                     center_x = int(detection[0] * width)
                     center_y = int(detection[1] * height)
@@ -106,10 +100,6 @@ class FrameProcessor:
         fps = self.frame_id / elapsed_time
         cv2.putText(frame, f"FPS:{str(round(fps, 2))}",
                     (10, 50), self.font, 2, (0, 0, 0), 1)
-        cv2.putText(frame, f"iterations:{str(iteration_counter)}",
-                    (10, 70), self.font, 2, (0, 0, 0), 1)
-        cv2.putText(frame, f"idx of out used: {actual_idx}",
-                    (10, 90), self.font, 2, (0, 0, 0), 1)
         return frame
 
     def destroy(self):
