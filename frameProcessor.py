@@ -27,9 +27,7 @@ class FrameProcessor:
                              for i in self.net.getUnconnectedOutLayers()]
 
     def sendCoordinates(self, x, y):
-        result = self.serial.feed_data(f'{x},{y}')
-        if not result:
-            raise Exception("Error communicating with Arduino")
+        self.serial.write_data(f'{x},{y}')
 
     def capture_and_process(self):
         frame = self.camera.capture()
