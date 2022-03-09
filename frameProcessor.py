@@ -34,7 +34,6 @@ class FrameProcessor:
 
         height, width, channels = frame.shape
 
-        # blob = cv2.dnn.blobFromImage(frame, 0.00392, (320, 320), (0, 0, 0), True, crop=False)
         blob = cv2.dnn.blobFromImage(image=frame, scalefactor=0.00392, size=(
             320, 320), mean=(0, 0, 0), swapRB=True, crop=False)
 
