@@ -5,9 +5,9 @@ from turretConfig import TurretConfig
 
 class SerialComm:
     def __init__(self) -> None:
+        self.arduino = None
         config = TurretConfig()
         failure_count = 0
-        self.arduino = None
         wait_time = config.serial_connect_retry_delay_seconds
         num_retries = config.serial_connect_num_retries
         while failure_count < num_retries:
@@ -19,7 +19,7 @@ class SerialComm:
                 failure_count += 1
                 if failure_count >= num_retries:
                     raise
-                time.sleep()
+                time.sleep(wait_time)
 
     def write_data(self, data):
         try:
