@@ -2,6 +2,8 @@
 
 Utilizes the YOLO classifying algorithm to identify possible targets.
 
+It's worth noting that the YOLO library only works on Linux. This has been written and tested on Ubuntu 20.04.
+
 ## Setup
 
 **NOTE**: This requires Python 3.8, as well as an NVIDIA GPU that has CUDA cores.
