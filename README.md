@@ -37,6 +37,6 @@ You may run into an issue with `yolo34py-gpu` package.
 6. Change directories back to the turret repo and run `pipenv install` again.
 
 ### Problem 2
-You may get a "Permission denied" error with serial connection. Add your user to the `dialout` user group:
+You may get a "permission denied" error with serial connection. Add your user to the `dialout` user group:
 
 - `sudo usermod -a -G dialout $USER`
