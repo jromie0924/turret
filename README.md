@@ -4,7 +4,7 @@ Utilizes the YOLO classifying algorithm to identify possible targets.
 
 ## Setup
 
-NOTE: This requires Python 3.8, as well as an NVIDIA GPU that has CUDA cores.
+**NOTE**: This requires Python 3.8, as well as an NVIDIA GPU that has CUDA cores.
 
 ### Install pipenv
 `sudo pip3 install pipenv`
