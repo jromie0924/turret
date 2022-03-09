@@ -9,9 +9,10 @@ def start():
     while True:
         frame = processor.capture_and_process()
         cv2.imshow('Turret Targeting', frame)
-        key = cv2.waitKey(1)  # wait 1ms each time
+        key = cv2.waitKey(1)
 
-        if key == 27:  # kill on ESC key
+        # kill on ESC key
+        if key == 27:
             break
     stop()
 
