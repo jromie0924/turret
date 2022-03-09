@@ -25,6 +25,8 @@ Utilizes the YOLO classifying algorithm to identify possible targets.
 Note that it's helpful if you have a webcam plugged into your machine; the program will likely not like it if you don't.
 
 ## Troubleshooting
+
+### Problem 1
 You may run into an issue with `yolo34py-gpu` package.
 
 1. `sudo apt update`
@@ -33,3 +35,8 @@ You may run into an issue with `yolo34py-gpu` package.
 4. `cd darknet`
 5. `make`
 6. Change directories back to the turret repo and run `pipenv install` again.
+
+### Problem 2
+You may get a "Permission denied" error with serial connection. Add your user to the `dialout` user group:
+
+- `sudo usermod -a -G dialout $USER`
