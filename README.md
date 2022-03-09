@@ -33,7 +33,7 @@ You may run into an issue with `yolo34py-gpu` package.
 2. `sudo apt install nvidia-cuda-toolkit`
 3. `git clone git@github.com:AlexeyAB/darknet.git`
 4. `cd darknet`
-5. Open the `Makefile` and set the `GPU` variable to `1`. Save it
+5. Open the `Makefile` and set the `GPU` variable to `1`. Save it.
 5. `make`
 6. Change directories back to the turret repo and run `pipenv install` again.
 
