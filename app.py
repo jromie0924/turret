@@ -1,7 +1,6 @@
 import cv2
 from frameProcessor import FrameProcessor
 
-
 processor = FrameProcessor()
 
 
