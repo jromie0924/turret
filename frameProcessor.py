@@ -26,7 +26,8 @@ class FrameProcessor:
                              for i in self.net.getUnconnectedOutLayers()]
 
     def sendCoordinates(self, x, y):
-        self.serial.write_data(f'{x},{y}')
+        # self.serial.write_data(f'{x},{y}')
+        self.serial.write_data(f'{x}')
 
     def capture_and_process(self):
         frame = self.camera.capture()
