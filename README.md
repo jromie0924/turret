@@ -2,6 +2,8 @@
 
 Utilizes the YOLO classifying algorithm to identify possible targets.
 
+-> See https://github.com/jromie0924/turret-GPIO for the Arduino code.
+
 It's worth noting that the YOLO library only works on Linux. This has been written and tested on Ubuntu 20.04.
 
 ## Setup
