@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 numpy = "*"
 imutils = "*"
-yolo34py-gpu = "*"
+yolov4 = "*"
 pyserial = "*"
 
 [dev-packages]

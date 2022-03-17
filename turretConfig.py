@@ -12,7 +12,7 @@ class TurretConfig:
 
     def load_neural_net(self):
         # tiny yolo for speed optimization
-        net = cv2.dnn.readNet('cfg/yolov3-tiny.weights', 'cfg/yolov3-tiny.cfg')
+        net = cv2.dnn.readNet('cfg/yolov4-tiny.weights', 'cfg/yolov4-tiny.cfg')
         return net
 
     def load_classes(self):
