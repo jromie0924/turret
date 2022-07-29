@@ -2,7 +2,7 @@ import cv2
 from frameProcessor import FrameProcessor
 
 processor = FrameProcessor()
-
+STOP_KEY = 27
 
 def start():
     while True:
@@ -11,20 +11,21 @@ def start():
         key = cv2.waitKey(1)
 
         # kill on ESC key
-        if key == 27:
+        if key == STOP_KEY:
             break
     stop()
 
 
 def stop():
     show_breadcrumbs = processor.destroy()
+    stop = True
 
     while show_breadcrumbs:
         key = cv2.waitKey(1)
 
-        if key == 27:
+        if key == STOP_KEY:
             break
-
+        
     cv2.destroyAllWindows()
 
 
