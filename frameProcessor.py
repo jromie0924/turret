@@ -4,6 +4,7 @@ import time
 from turretConfig import TurretConfig
 from turretCam import TurretCam
 from serialComm import SerialComm
+from breadcrumbs import Breadcrumbs
 
 
 class FrameProcessor:
@@ -17,6 +18,8 @@ class FrameProcessor:
         self.font = cv2.FONT_HERSHEY_PLAIN
         self.starting_time = time.time()
         self.frame_id = 0
+        self.enable_breadcrumbs = config.enable_breadcrumbs
+        self.breadcrumbs = Breadcrumbs()
 
         self.show_boxes = config.show_object_boxes
         self.show_target_points = config.show_target_points
@@ -81,6 +84,9 @@ class FrameProcessor:
             target_y = int(y + h/2)
             self.sendCoordinates(target_x, target_y)
 
+            if self.enable_breadcrumbs:
+                self.breadcrumbs.add_breadcrumb(x=target_x, y=target_y)
+
             if self.show_target_points:
                 # Red (the format is BGR for some reason)
                 target_color = (0, 0, 255)
@@ -102,5 +108,8 @@ class FrameProcessor:
                     (10, 50), self.font, 2, (0, 0, 0), 1)
         return frame
 
-    def destroy(self):
+    def destroy(self) -> bool:
+        if self.enable_breadcrumbs:
+            self.breadcrumbs.show_breadcrumbs(self.camera.capture())
         self.camera.destroy()
+        return self.enable_breadcrumbs
