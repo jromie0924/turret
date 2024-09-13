@@ -2,15 +2,14 @@ import cv2
 from frameProcessor import FrameProcessor
 
 processor = FrameProcessor()
-STOP_KEY = 27
+STOP_KEY = 27 # ESC key
 
 def start():
     while True:
         frame = processor.capture_and_process()
         cv2.imshow('Turret Targeting', frame)
-        key = cv2.waitKey(1)
+        key = cv2.waitKey(1) # Wait for 1ms for a keypress - else continue processing the next frame.
 
-        # kill on ESC key
         if key == STOP_KEY:
             break
     stop()
