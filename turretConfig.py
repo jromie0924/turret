@@ -11,7 +11,7 @@ class TurretConfig:
         self.accepted_classes = ['person']
         self.serial_connect_retry_delay_seconds = 1
         self.serial_connect_num_retries = 10
-        self.enable_breadcrumbs = True # print breadcrumbs of all target positions when True
+        self.enable_breadcrumbs = False # print breadcrumbs of all target positions when True
 
     def load_neural_net(self):
         # tiny yolo for speed optimization
